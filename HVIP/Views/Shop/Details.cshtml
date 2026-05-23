@@ -1,0 +1,15 @@
+@model HVIP.Models.Product
+
+@{
+    ViewBag.Title = Model.Name;
+}
+<div class="card">
+    <img src="@Model.ImageUrl" class="card-img-top" alt="@Model.Name" style="height:300px;object-fit:cover;">
+    <div class="card-body">
+        <h2>@Model.Name</h2>
+        <p>@Model.Description</p>
+        <p><strong>Price: $@Model.Price</strong></p>
+        <button class="btn btn-success">Add to Cart</button>
+        <a href="@Url.Action("Index", "Shop")" class="btn btn-link">Back to Shop</a>
+    </div>
+</div>

@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - SBL Ayurvedic E-Commerce</title>
+    @Styles.Render("~/Content/css")
+    <link href="/Content/ayurvedic-theme.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <!-- Top Green Bar -->
+    <div style="background:#176d1b;color:#fff;padding:6px 0;text-align:center;font-size:15px;">
+        <span>🌸 SBL CarePlan - ₹150 membership offer for just ₹99 for one month</span>
+    </div>
+    <!-- Header -->
+    <div class="container-fluid py-2" style="background:#fff;">
+        <div class="d-flex align-items-center justify-content-between">
+            <a href="@Url.Action("Index", "Home")"><img src="/Content/Images/sbl-logo.png" alt="SBL Logo" style="height:70px;"></a>
+            <nav>
+                <ul class="nav">
+                    <li class="nav-item"><a class="nav-link active" href="@Url.Action("Index", "Home")">HOME</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">ABOUT US</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">OUR PRODUCTS</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">AILMENT</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">ABOUT HOMOEOPATHY</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">ONLINE CONSULTATION</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">CARE PLAN</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">DOCTOR'S CORNER</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Shop")">SHOP</a></li>
+                </ul>
+            </nav>
+            <div class="d-flex align-items-center">
+                <input type="text" class="form-control" placeholder="Search for products..." style="width:250px;">
+                <button class="btn btn-success ml-2"><i class="fa fa-search"></i></button>
+                <a href="#" class="ml-3"><i class="fa fa-gift"></i></a>
+                <a href="#" class="ml-2"><i class="fa fa-shopping-cart"></i> <span>0</span></a>
+                <a href="#" class="ml-2">Login</a>
+                <a href="#" class="ml-2">REGISTER</a>
+                <a href="#" class="ml-2"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="ml-1"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="ml-1"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="ml-1"><i class="fab fa-youtube"></i></a>
+                <a href="#" class="ml-1"><i class="fab fa-linkedin"></i></a>
+                <a href="#" class="ml-1"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - SBL Ayurvedic E-Commerce</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
