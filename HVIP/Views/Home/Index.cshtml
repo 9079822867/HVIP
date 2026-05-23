@@ -1,33 +1,270 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+@using HVIP.Models
+@{
+    ViewBag.Title = "Home";
+    var featured  = ViewBag.FeaturedProducts as List<Product> ?? new List<Product>();
+    var bestsellers = ViewBag.BestSellers as List<Product> ?? new List<Product>();
+    var categories  = ViewBag.Categories  as List<Category> ?? new List<Category>();
 }
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
-
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
+<!-- ═══ HERO CAROUSEL ═══════════════════════════════════════════════ -->
+<section class="hero-section">
+    <!-- Slide 1 -->
+    <div class="hero-slide slide-1 active">
+        <div class="hero-icon-bg"><i class="fas fa-leaf"></i></div>
+        <div class="container">
+            <div class="hero-content">
+                <span class="hero-tag">🌿 Trusted Since 1984</span>
+                <h1 class="hero-title">India's Most Trusted<br><span>Homeopathic Medicines</span></h1>
+                <p class="hero-desc">100% authentic, GMP certified homeopathic remedies prepared with scientific precision for natural healing.</p>
+                <div class="hero-actions">
+                    <a href="@Url.Action("Index","Shop")" class="btn-hero-primary">Shop Now</a>
+                    <a href="@Url.Action("About","Home")" class="btn-hero-outline">Learn More</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat-item"><div class="hero-stat-num">10L+</div><div class="hero-stat-label">Happy Customers</div></div>
+                    <div class="hero-stat-item"><div class="hero-stat-num">31+</div><div class="hero-stat-label">Products</div></div>
+                    <div class="hero-stat-item"><div class="hero-stat-num">40+</div><div class="hero-stat-label">Years Experience</div></div>
+                </div>
+            </div>
+        </div>
     </div>
-</main>
+    <!-- Slide 2 -->
+    <div class="hero-slide slide-2">
+        <div class="hero-icon-bg"><i class="fas fa-tint"></i></div>
+        <div class="container">
+            <div class="hero-content">
+                <span class="hero-tag">🔬 Scientifically Prepared</span>
+                <h1 class="hero-title">Complete Range of<br><span>Mother Tinctures & Dilutions</span></h1>
+                <p class="hero-desc">From Arnica to Calendula — explore our full catalog of classical homeopathic preparations for every ailment.</p>
+                <div class="hero-actions">
+                    <a href="@Url.Action("Index","Shop",new{categoryId=2})" class="btn-hero-primary">Mother Tinctures</a>
+                    <a href="@Url.Action("Index","Shop",new{categoryId=1})" class="btn-hero-outline">View Dilutions</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Slide 3 -->
+    <div class="hero-slide slide-3">
+        <div class="hero-icon-bg"><i class="fas fa-shipping-fast"></i></div>
+        <div class="container">
+            <div class="hero-content">
+                <span class="hero-tag">🚚 Fast Delivery</span>
+                <h1 class="hero-title">Free Delivery<br><span>On Orders Above ₹500</span></h1>
+                <p class="hero-desc">Get your medicines delivered to your doorstep across India within 3–5 business days. Pan-India shipping available.</p>
+                <div class="hero-actions">
+                    <a href="@Url.Action("Index","Shop")" class="btn-hero-primary">Order Now</a>
+                    <a href="@Url.Action("Contact","Home")" class="btn-hero-outline">Contact Us</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Controls -->
+    <button class="carousel-btn carousel-prev" onclick="prevSlide()"><i class="fas fa-chevron-left"></i></button>
+    <button class="carousel-btn carousel-next" onclick="nextSlide()"><i class="fas fa-chevron-right"></i></button>
+    <div class="carousel-dots">
+        <button class="dot active" onclick="goSlide(0)"></button>
+        <button class="dot" onclick="goSlide(1)"></button>
+        <button class="dot" onclick="goSlide(2)"></button>
+    </div>
+</section>
+
+<!-- ═══ TRUST BAR ════════════════════════════════════════════════════ -->
+<section class="trust-bar">
+    <div class="container">
+        <div class="row gy-2">
+            <div class="col-6 col-md-3"><div class="trust-item"><i class="fas fa-truck"></i> Free Delivery Above ₹500</div></div>
+            <div class="col-6 col-md-3"><div class="trust-item"><i class="fas fa-shield-alt"></i> 100% Authentic Products</div></div>
+            <div class="col-6 col-md-3"><div class="trust-item"><i class="fas fa-undo-alt"></i> Easy Returns & Refunds</div></div>
+            <div class="col-6 col-md-3"><div class="trust-item"><i class="fas fa-headset"></i> 24×7 Customer Support</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ CATEGORIES ════════════════════════════════════════════════════ -->
+<section class="py-section bg-light-green">
+    <div class="container">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Shop by Category</h2>
+                <p class="section-subtitle">Explore our complete range of homeopathic products</p>
+            </div>
+            <a href="@Url.Action("Index","Shop")" class="view-all-btn">View All</a>
+        </div>
+        <div class="row g-3">
+            @foreach (var cat in categories)
+            {
+                <div class="col-6 col-sm-4 col-md-3 col-lg-3">
+                    <a href="@Url.Action("Index","Shop",new{categoryId=cat.Id})" class="cat-card">
+                        <div class="cat-icon-circle" style="background:@cat.Color;">
+                            <i class="@cat.Icon"></i>
+                        </div>
+                        <div class="cat-name">@cat.Name</div>
+                        <div class="cat-count">@ProductCatalog.GetByCategory(cat.Id).Count products</div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- ═══ FEATURED PRODUCTS ═════════════════════════════════════════════ -->
+<section class="py-section">
+    <div class="container">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Featured Products</h2>
+                <p class="section-subtitle">Handpicked top-quality homeopathic remedies</p>
+            </div>
+            <a href="@Url.Action("Index","Shop")" class="view-all-btn">View All</a>
+        </div>
+        <div class="row g-3">
+            @foreach (var p in featured)
+            {
+                <div class="col-6 col-md-4 col-lg-3">
+                    @Html.Partial("_ProductCard", p)
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- ═══ PROMO BANNER ══════════════════════════════════════════════════ -->
+<section class="py-section-sm bg-light-green">
+    <div class="container">
+        <div class="promo-banner">
+            <span class="promo-tag">LIMITED TIME OFFER</span>
+            <h2 class="promo-title">Get 15% Off on Your First Order!</h2>
+            <p class="promo-desc">Use code below at checkout. Valid on all products. Minimum purchase ₹299.</p>
+            <div class="promo-code">HVIP15</div><br>
+            <a href="@Url.Action("Index","Shop")" class="btn-promo"><i class="fas fa-shopping-bag me-2"></i>Shop Now & Save</a>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ BESTSELLERS ═══════════════════════════════════════════════════ -->
+<section class="py-section">
+    <div class="container">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title"><i class="fas fa-fire text-danger me-2"></i>Bestsellers</h2>
+                <p class="section-subtitle">Most loved products by our customers</p>
+            </div>
+            <a href="@Url.Action("Index","Shop")" class="view-all-btn">View All</a>
+        </div>
+        <div class="row g-3">
+            @foreach (var p in bestsellers)
+            {
+                <div class="col-6 col-md-4 col-lg-4">
+                    @Html.Partial("_ProductCard", p)
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- ═══ WHY CHOOSE US ═════════════════════════════════════════════════ -->
+<section class="py-section bg-light-green">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="section-title">Why Choose HVIP?</h2>
+            <p class="section-subtitle">Committed to your health and wellness since 1984</p>
+        </div>
+        <div class="row g-3">
+            <div class="col-sm-6 col-lg-3">
+                <div class="why-card">
+                    <div class="why-icon"><i class="fas fa-certificate"></i></div>
+                    <h5 class="why-title">GMP Certified</h5>
+                    <p class="why-desc">All products manufactured under strict GMP guidelines ensuring purity and consistency.</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="why-card">
+                    <div class="why-icon"><i class="fas fa-leaf"></i></div>
+                    <h5 class="why-title">100% Natural</h5>
+                    <p class="why-desc">Made from natural botanical, mineral and animal sources. No harmful chemicals or additives.</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="why-card">
+                    <div class="why-icon"><i class="fas fa-flask"></i></div>
+                    <h5 class="why-title">Research Backed</h5>
+                    <p class="why-desc">Formulated by qualified homeopathic doctors and verified through clinical research.</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="why-card">
+                    <div class="why-icon"><i class="fas fa-truck"></i></div>
+                    <h5 class="why-title">Pan-India Delivery</h5>
+                    <p class="why-desc">Fast, secure shipping to all 29 states and 7 union territories across India.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ══════════════════════════════════════════════════ -->
+<section class="py-section">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="section-title">What Our Customers Say</h2>
+            <p class="section-subtitle">Real experiences from real people</p>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="testi-card">
+                    <div class="testi-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="testi-text">"I've been using HVIP Arnica Hair Oil for 3 months and the results are amazing. My hair fall reduced drastically and new growth has started. Highly recommend!"</p>
+                    <div class="testi-author">
+                        <div class="author-avatar" style="background:#1a6e2e;">R</div>
+                        <div><div class="author-name">Renu Sharma</div><div class="author-location">Delhi, India</div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testi-card">
+                    <div class="testi-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+                    <p class="testi-text">"HVIP Febin Drops worked wonders for my son's recurrent cold and cough. Safe, effective and no side effects. Will definitely order again!"</p>
+                    <div class="testi-author">
+                        <div class="author-avatar" style="background:#0277bd;">A</div>
+                        <div><div class="author-name">Anil Kumar</div><div class="author-location">Mumbai, Maharashtra</div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testi-card">
+                    <div class="testi-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="testi-text">"The Calendula Ointment is my go-to for any skin irritation or minor cuts. Heals so quickly and naturally. Love the quality of HVIP products!"</p>
+                    <div class="testi-author">
+                        <div class="author-avatar" style="background:#880e4f;">P</div>
+                        <div><div class="author-name">Priya Nair</div><div class="author-location">Kochi, Kerala</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@using HVIP.Helpers
+
+@section scripts {
+<script>
+    var currentSlide = 0;
+    var slides = document.querySelectorAll('.hero-slide');
+    var dots   = document.querySelectorAll('.dot');
+    var timer;
+
+    function showSlide(n) {
+        slides.forEach(function(s) { s.classList.remove('active'); });
+        dots.forEach(function(d)  { d.classList.remove('active'); });
+        currentSlide = (n + slides.length) % slides.length;
+        slides[currentSlide].classList.add('active');
+        dots[currentSlide].classList.add('active');
+    }
+    function nextSlide() { showSlide(currentSlide + 1); resetTimer(); }
+    function prevSlide() { showSlide(currentSlide - 1); resetTimer(); }
+    function goSlide(n)  { showSlide(n); resetTimer(); }
+    function resetTimer() { clearInterval(timer); timer = setInterval(function() { nextSlide(); }, 5000); }
+
+    timer = setInterval(function() { nextSlide(); }, 5000);
+</script>
+}

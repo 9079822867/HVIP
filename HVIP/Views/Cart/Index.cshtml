@@ -1,0 +1,135 @@
+@model HVIP.Models.Cart
+@{
+    ViewBag.Title = "Shopping Cart";
+}
+
+<!-- Breadcrumb -->
+<div class="breadcrumb-bar">
+    <div class="container">
+        <span class="breadcrumb-list">
+            <a href="@Url.Action("Index","Home")"><i class="fas fa-home"></i> Home</a>
+            <span class="sep">/</span>
+            <span>Shopping Cart</span>
+        </span>
+    </div>
+</div>
+
+<section class="py-section">
+    <div class="container">
+        @if (!Model.Items.Any())
+        {
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>Your Cart is Empty</h3>
+                <p>Looks like you haven't added any products yet.</p>
+                <a href="@Url.Action("Index","Shop")" class="btn-continue"><i class="fas fa-arrow-left me-2"></i>Continue Shopping</a>
+            </div>
+        }
+        else
+        {
+            <div class="row g-4">
+                <!-- Cart Items -->
+                <div class="col-lg-8">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 style="color:var(--primary-dark);"><i class="fas fa-shopping-cart me-2"></i>Cart Items (@Model.ItemCount)</h4>
+                        <a href="@Url.Action("Index","Shop")" style="color:var(--primary);font-size:14px;"><i class="fas fa-arrow-left me-1"></i>Continue Shopping</a>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table cart-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="text-center">Price</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-center">Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div class="cart-prod-icon" style="background:@item.CategoryColor;">
+                                                    <i class="@item.CategoryIcon"></i>
+                                                </div>
+                                                <div>
+                                                    <div style="font-weight:700;font-size:14px;">@item.ProductName</div>
+                                                    @if (!string.IsNullOrEmpty(item.ProductSize))
+                                                    { <div style="font-size:12px;color:var(--text-muted);">Size: @item.ProductSize</div> }
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center" style="font-weight:600;">₹@item.UnitPrice.ToString("0")</td>
+                                        <td class="text-center">
+                                            <form action="@Url.Action("UpdateQty","Cart")" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@item.ProductId" />
+                                                <div class="d-flex align-items-center justify-content-center gap-1">
+                                                    <button type="submit" name="qty" value="@(item.Quantity - 1)" class="btn btn-sm" style="background:var(--primary-xlight);color:var(--primary);border:none;width:28px;height:28px;border-radius:4px;padding:0;">−</button>
+                                                    <span class="cart-qty" style="display:inline-block;text-align:center;font-weight:700;">@item.Quantity</span>
+                                                    <button type="submit" name="qty" value="@(item.Quantity + 1)" class="btn btn-sm" style="background:var(--primary);color:#fff;border:none;width:28px;height:28px;border-radius:4px;padding:0;">+</button>
+                                                </div>
+                                            </form>
+                                        </td>
+                                        <td class="text-center" style="font-weight:700;color:var(--primary-dark);">₹@item.Total.ToString("0")</td>
+                                        <td class="text-center">
+                                            <a href="@Url.Action("Remove","Cart",new{id=item.ProductId})" class="btn btn-sm btn-outline-danger" title="Remove">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="col-lg-4">
+                    <div class="cart-summary-card">
+                        <h5 style="color:var(--primary-dark);font-weight:700;margin-bottom:16px;"><i class="fas fa-receipt me-2"></i>Order Summary</h5>
+
+                        <div class="sum-row"><span>Subtotal</span><span>₹@Model.SubTotal.ToString("0")</span></div>
+                        <div class="sum-row">
+                            <span>Shipping</span>
+                            <span>
+                                @if (Model.Shipping == 0)
+                                { <span style="color:var(--primary);font-weight:600;">FREE</span> }
+                                else
+                                { <span>₹@Model.Shipping.ToString("0")</span> }
+                            </span>
+                        </div>
+                        <div class="sum-row total"><span>Grand Total</span><span>₹@Model.GrandTotal.ToString("0")</span></div>
+
+                        <a href="@Url.Action("Index","Checkout")" class="btn-checkout">
+                            <i class="fas fa-lock me-2"></i>Proceed to Checkout
+                        </a>
+
+                        @if (Model.Shipping > 0)
+                        {
+                            var needed = 500 - Model.SubTotal;
+                            <div class="free-ship-note">
+                                <i class="fas fa-truck"></i>
+                                Add ₹@needed.ToString("0") more for FREE delivery!
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="free-ship-note">
+                                <i class="fas fa-check-circle"></i>
+                                You qualify for FREE delivery!
+                            </div>
+                        }
+
+                        <div class="mt-3 text-center" style="font-size:12px;color:var(--text-muted);">
+                            <i class="fas fa-shield-alt text-success me-1"></i>Secure & Encrypted Checkout
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>

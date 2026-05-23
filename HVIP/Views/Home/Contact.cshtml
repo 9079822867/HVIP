@@ -1,19 +1,109 @@
-﻿@{
-    ViewBag.Title = "Contact";
+@model HVIP.Models.ContactMessage
+@{
+    ViewBag.Title = "Contact Us";
 }
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <h3>@ViewBag.Message</h3>
 
-    <address>
-        One Microsoft Way<br />
-        Redmond, WA 98052-6399<br />
-        <abbr title="Phone">P:</abbr>
-        425.555.0100
-    </address>
+<!-- Hero -->
+<div style="background:linear-gradient(135deg,#0d4a1e,#1a6e2e);padding:60px 0;color:#fff;text-align:center;">
+    <div class="container">
+        <h1 style="font-size:40px;font-weight:800;margin-bottom:10px;"><i class="fas fa-headset me-3"></i>Contact Us</h1>
+        <p style="font-size:16px;opacity:.85;max-width:500px;margin:0 auto;">We're here to help! Reach out to us anytime.</p>
+    </div>
+</div>
 
-    <address>
-        <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
-        <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-    </address>
-</main>
+<section class="py-section bg-light-green">
+    <div class="container">
+        <!-- Contact Info Cards -->
+        <div class="row g-3 mb-5">
+            <div class="col-sm-6 col-lg-3">
+                <div class="contact-card">
+                    <div class="contact-icon-wrap"><i class="fas fa-phone-alt"></i></div>
+                    <h6 style="font-weight:700;">Toll Free</h6>
+                    <p style="font-size:14px;color:var(--text-muted);">1800-123-4567<br><small>Mon–Sat, 9am–6pm</small></p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="contact-card">
+                    <div class="contact-icon-wrap"><i class="fas fa-envelope"></i></div>
+                    <h6 style="font-weight:700;">Email</h6>
+                    <p style="font-size:14px;color:var(--text-muted);">info@hvip.com<br>support@hvip.com</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="contact-card">
+                    <div class="contact-icon-wrap"><i class="fas fa-map-marker-alt"></i></div>
+                    <h6 style="font-weight:700;">Head Office</h6>
+                    <p style="font-size:14px;color:var(--text-muted);">15, Industrial Area Phase II,<br>New Delhi — 110020</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="contact-card">
+                    <div class="contact-icon-wrap"><i class="fab fa-whatsapp"></i></div>
+                    <h6 style="font-weight:700;">WhatsApp</h6>
+                    <p style="font-size:14px;color:var(--text-muted);">+91 98765-43210<br><small>Quick support</small></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div style="background:#fff;border-radius:16px;padding:36px;box-shadow:var(--shadow-md);">
+                    <h3 style="color:var(--primary-dark);margin-bottom:6px;"><i class="fas fa-paper-plane me-2"></i>Send us a Message</h3>
+                    <p style="color:var(--text-muted);margin-bottom:24px;">We typically respond within 24 hours.</p>
+
+                    @if (ViewBag.Success != null && (bool)ViewBag.Success)
+                    {
+                        <div class="alert alert-success" style="background:#e8f5e9;border:1px solid var(--primary-light);border-radius:10px;padding:16px;margin-bottom:20px;">
+                            <i class="fas fa-check-circle me-2" style="color:var(--primary);"></i>
+                            <strong>Thank you!</strong> Your message has been sent successfully. We'll get back to you soon.
+                        </div>
+                    }
+
+                    @using (Html.BeginForm("Contact", "Home", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Your Name *</label>
+                                @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Full name" })
+                                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger", style = "font-size:12px;" })
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email Address *</label>
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "your@email.com", type = "email" })
+                                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger", style = "font-size:12px;" })
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Phone Number *</label>
+                                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control", placeholder = "Mobile number" })
+                                @Html.ValidationMessageFor(m => m.Phone, "", new { @class = "text-danger", style = "font-size:12px;" })
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Subject *</label>
+                                @Html.DropDownListFor(m => m.Subject,
+                                    new SelectList(new[]{"Order Enquiry","Product Information","Return & Refund","Medical Advice","Wholesale Enquiry","Feedback","Other"}),
+                                    "-- Select Subject --", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Subject, "", new { @class = "text-danger", style = "font-size:12px;" })
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Your Message *</label>
+                                @Html.TextAreaFor(m => m.Message, new { @class = "form-control", rows = "5", placeholder = "Type your message here..." })
+                                @Html.ValidationMessageFor(m => m.Message, "", new { @class = "text-danger", style = "font-size:12px;" })
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn-cart-lg">
+                                    <i class="fas fa-paper-plane"></i> Send Message
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts {
+@Scripts.Render("~/bundles/jqueryval")
+}

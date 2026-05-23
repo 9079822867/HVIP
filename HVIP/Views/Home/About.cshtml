@@ -1,9 +1,110 @@
-﻿@{
-    ViewBag.Title = "About";
+@{
+    ViewBag.Title = "About Us";
 }
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <h3>@ViewBag.Message</h3>
 
-    <p>Use this area to provide additional information.</p>
-</main>
+<!-- ABOUT HERO -->
+<section class="about-hero">
+    <div class="container">
+        <h1><i class="fas fa-leaf me-3"></i>About HVIP Homeopathic</h1>
+        <p>Pioneering natural healing through authentic homeopathic medicine since 1984. Trusted by millions across India.</p>
+    </div>
+</section>
+
+<!-- STATS -->
+<section class="py-section bg-light-green">
+    <div class="container">
+        <div class="row g-3 text-center">
+            <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-num">40+</div><div class="stat-label">Years of Excellence</div></div></div>
+            <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-num">10L+</div><div class="stat-label">Happy Customers</div></div></div>
+            <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-num">31+</div><div class="stat-label">Products</div></div></div>
+            <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-num">29+</div><div class="stat-label">States Served</div></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- OUR STORY -->
+<section class="py-section">
+    <div class="container">
+        <div class="row g-4 align-items-center">
+            <div class="col-lg-6">
+                <h2 class="section-title">Our Story</h2>
+                <p style="font-size:15px;line-height:1.8;color:#444;">
+                    Founded in 1984, HVIP Homeopathic began as a small pharmacy with a big vision — to make authentic homeopathic medicines accessible to every Indian household. Over four decades, we have grown into one of India's most trusted names in natural healthcare.
+                </p>
+                <p style="font-size:15px;line-height:1.8;color:#444;">
+                    Our journey has been guided by a deep respect for the principles of homeopathy as established by Dr. Samuel Hahnemann. Every product we create follows the classical process of potentization, ensuring maximum therapeutic effectiveness.
+                </p>
+                <p style="font-size:15px;line-height:1.8;color:#444;">
+                    Today, HVIP serves over 10 lakh customers across India, offering a comprehensive range of dilutions, mother tinctures, biochemic tablets, combination remedies and specialized wellness products.
+                </p>
+            </div>
+            <div class="col-lg-6">
+                <div style="background:linear-gradient(135deg,#1a6e2e,#2e8b47);border-radius:16px;padding:40px;text-align:center;color:#fff;">
+                    <i class="fas fa-leaf" style="font-size:80px;opacity:.3;"></i>
+                    <h3 style="margin-top:16px;">Our Mission</h3>
+                    <p style="opacity:.9;font-size:16px;">
+                        "To provide safe, effective and affordable homeopathic healthcare to every individual, empowering them to live healthier lives naturally."
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- VALUES -->
+<section class="py-section bg-light-green">
+    <div class="container">
+        <div class="text-center mb-4">
+            <h2 class="section-title">Our Core Values</h2>
+            <p class="section-subtitle">The principles that guide everything we do</p>
+        </div>
+        <div class="row g-3">
+            <div class="col-sm-6 col-lg-3">
+                <div class="why-card">
+                    <div class="why-icon"><i class="fas fa-medal"></i></div>
+                    <h5 class="why-title">Quality First</h5>
+                    <p class="why-desc">GMP certified manufacturing. Every batch tested for purity, potency and safety before dispatch.</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="why-card">
+                    <div class="why-icon"><i class="fas fa-heart"></i></div>
+                    <h5 class="why-title">Patient-Centric</h5>
+                    <p class="why-desc">We put patients' wellbeing at the center of every decision — from formulation to delivery.</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="why-card">
+                    <div class="why-icon"><i class="fas fa-flask"></i></div>
+                    <h5 class="why-title">Science-Backed</h5>
+                    <p class="why-desc">Our formulations are developed by qualified homeopathic physicians with decades of clinical experience.</p>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-3">
+                <div class="why-card">
+                    <div class="why-icon"><i class="fas fa-seedling"></i></div>
+                    <h5 class="why-title">Sustainability</h5>
+                    <p class="why-desc">Ethically sourced raw materials. Eco-friendly packaging. Responsible practices for a greener tomorrow.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section class="py-section">
+    <div class="container text-center">
+        <h2 class="section-title mb-4">Certifications & Compliance</h2>
+        <div class="row g-3 justify-content-center">
+            @foreach (var cert in new[]{"GMP Certified","ISO 9001:2015","FSSAI Approved","WHO-GMP","AYUSH Certified"})
+            {
+                <div class="col-6 col-md-4 col-lg-2">
+                    <div style="background:#e8f5e9;border:2px solid var(--primary);border-radius:12px;padding:18px 10px;text-align:center;">
+                        <i class="fas fa-certificate" style="font-size:28px;color:var(--primary);display:block;margin-bottom:8px;"></i>
+                        <div style="font-size:12px;font-weight:700;color:var(--primary-dark);">@cert</div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

@@ -120,14 +120,23 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CartController.cs" />
+    <Compile Include="Controllers\CheckoutController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ShopController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\CartHelper.cs" />
+    <Compile Include="Helpers\ProductCatalog.cs" />
     <Compile Include="Models\Cart.cs" />
+    <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\CheckoutViewModel.cs" />
+    <Compile Include="Models\ContactMessage.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ShopViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +193,11 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shop\Index.cshtml" />
     <Content Include="Views\Shop\Details.cshtml" />
+    <Content Include="Views\Shared\_ProductCard.cshtml" />
+    <Content Include="Views\Cart\Index.cshtml" />
+    <Content Include="Views\Checkout\Index.cshtml" />
+    <Content Include="Views\Checkout\Success.cshtml" />
+    <Content Include="Content\hvip-theme.css" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

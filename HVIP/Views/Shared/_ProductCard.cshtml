@@ -1,0 +1,57 @@
+@model HVIP.Models.Product
+@{
+    var p = Model;
+    int discount = p.DiscountPercent;
+}
+<div class="product-card">
+    <!-- Badges -->
+    <div class="prod-badges">
+        @if (p.IsOnSale)   { <span class="badge-pill badge-sale">-@discount%</span> }
+        @if (p.IsNew)      { <span class="badge-pill badge-new">NEW</span> }
+        @if (p.IsBestseller) { <span class="badge-pill badge-best">BESTSELLER</span> }
+    </div>
+
+    <!-- Icon Area -->
+    <div class="prod-icon-area" style="background:linear-gradient(135deg,@p.CategoryColor 0%,@(p.CategoryColor)cc 100%);">
+        <i class="@p.CategoryIcon"></i>
+    </div>
+
+    <!-- Body -->
+    <div class="prod-body">
+        <div class="prod-category">@p.CategoryName</div>
+        <h5 class="prod-name">@p.Name</h5>
+        <p class="prod-short-desc">@p.ShortDescription</p>
+
+        <!-- Rating -->
+        <div class="prod-rating">
+            @for (int i = 1; i <= 5; i++)
+            {
+                if (i <= Math.Floor(p.Rating))      { <i class="fas fa-star"></i> }
+                else if (i - 0.5 <= p.Rating)       { <i class="fas fa-star-half-alt"></i> }
+                else                                 { <i class="far fa-star"></i> }
+            }
+            <span>(@p.ReviewCount)</span>
+        </div>
+
+        <!-- Price -->
+        <div class="prod-price-row">
+            <span class="prod-price">@p.Price.ToString("0")</span>
+            @if (p.IsOnSale)
+            {
+                <span class="prod-orig">@p.OriginalPrice.Value.ToString("0")</span>
+                <span class="prod-disc">@discount% OFF</span>
+            }
+        </div>
+        <div class="prod-size">@p.Size</div>
+    </div>
+
+    <!-- Footer -->
+    <div class="prod-footer">
+        <button class="btn-add-cart" onclick="addToCart(@p.Id)">
+            <i class="fas fa-shopping-cart"></i> ADD TO CART
+        </button>
+        <a href="@Url.Action("Details","Shop",new{id=p.Id})" class="btn-view-det" title="View Details">
+            <i class="fas fa-eye"></i>
+        </a>
+    </div>
+</div>

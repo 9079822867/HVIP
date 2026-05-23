@@ -1,62 +1,222 @@
-﻿<!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - SBL Ayurvedic E-Commerce</title>
+    <title>@ViewBag.Title - HVIP Homeopathic</title>
     @Styles.Render("~/Content/css")
-    <link href="/Content/ayurvedic-theme.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="/Content/hvip-theme.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <!-- Top Green Bar -->
-    <div style="background:#176d1b;color:#fff;padding:6px 0;text-align:center;font-size:15px;">
-        <span>🌸 SBL CarePlan - ₹150 membership offer for just ₹99 for one month</span>
-    </div>
-    <!-- Header -->
-    <div class="container-fluid py-2" style="background:#fff;">
-        <div class="d-flex align-items-center justify-content-between">
-            <a href="@Url.Action("Index", "Home")"><img src="/Content/Images/sbl-logo.png" alt="SBL Logo" style="height:70px;"></a>
-            <nav>
-                <ul class="nav">
-                    <li class="nav-item"><a class="nav-link active" href="@Url.Action("Index", "Home")">HOME</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">ABOUT US</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">OUR PRODUCTS</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">AILMENT</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">ABOUT HOMOEOPATHY</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">ONLINE CONSULTATION</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">CARE PLAN</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">DOCTOR'S CORNER</a></li>
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Shop")">SHOP</a></li>
-                </ul>
-            </nav>
-            <div class="d-flex align-items-center">
-                <input type="text" class="form-control" placeholder="Search for products..." style="width:250px;">
-                <button class="btn btn-success ml-2"><i class="fa fa-search"></i></button>
-                <a href="#" class="ml-3"><i class="fa fa-gift"></i></a>
-                <a href="#" class="ml-2"><i class="fa fa-shopping-cart"></i> <span>0</span></a>
-                <a href="#" class="ml-2">Login</a>
-                <a href="#" class="ml-2">REGISTER</a>
-                <a href="#" class="ml-2"><i class="fab fa-facebook"></i></a>
-                <a href="#" class="ml-1"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="ml-1"><i class="fab fa-twitter"></i></a>
-                <a href="#" class="ml-1"><i class="fab fa-youtube"></i></a>
-                <a href="#" class="ml-1"><i class="fab fa-linkedin"></i></a>
-                <a href="#" class="ml-1"><i class="fab fa-whatsapp"></i></a>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+    <div class="container">
+        <div class="d-flex align-items-center">
+            <div class="d-none d-md-flex align-items-center" style="gap:16px;">
+                <span><i class="fas fa-phone-alt me-1"></i> 1800-123-4567</span>
+                <span><i class="fas fa-envelope me-1"></i> info@hvip.com</span>
+            </div>
+            <div class="marquee-wrap flex-grow-1 text-center d-none d-lg-block">
+                <span class="marquee-text">
+                    🚚 Free Delivery on orders above ₹500 &nbsp;|&nbsp; ✅ 100% Authentic Products &nbsp;|&nbsp;
+                    🌿 Trusted Homeopathic Medicines &nbsp;|&nbsp; ⭐ 10 Lakh+ Happy Customers &nbsp;|&nbsp;
+                    💊 30+ Products Available &nbsp;|&nbsp; 🔒 Secure & Safe Shopping
+                </span>
+            </div>
+            <div class="ms-auto d-flex" style="gap:10px;">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+                <a href="#"><i class="fab fa-whatsapp"></i></a>
             </div>
         </div>
     </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - SBL Ayurvedic E-Commerce</p>
-        </footer>
-    </div>
+</div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+<!-- MAIN HEADER -->
+<header class="main-header">
+    <div class="container d-flex align-items-center">
+        <!-- Logo -->
+        <a href="@Url.Action("Index","Home")" class="header-logo">
+            <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+            <div>
+                <span class="logo-main">HVIP</span>
+                <span class="logo-sub">HOMEOPATHIC</span>
+            </div>
+        </a>
+
+        <!-- Search -->
+        <div class="header-search">
+            <form action="@Url.Action("Index","Shop")" method="get" class="search-form">
+                <input type="text" name="q" placeholder="Search medicines, ailments..." value="@(ViewBag.SearchQuery ?? "")" />
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+
+        <!-- Icons -->
+        <div class="header-right">
+            <a href="@Url.Action("Index","Cart")" class="header-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-badge" id="cartCount">@(ViewBag.CartCount ?? 0)</span>
+                <span>Cart</span>
+            </a>
+            <a href="#" class="header-icon d-none d-md-flex">
+                <i class="fas fa-user-circle"></i>
+                <span>Login</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- MAIN NAV -->
+<nav class="main-nav" id="mainNav">
+    <div class="container d-flex align-items-center">
+        <ul class="nav-list flex-grow-1">
+            <li><a href="@Url.Action("Index","Home")"><i class="fas fa-home me-1"></i>Home</a></li>
+            <li class="has-dropdown">
+                <a href="@Url.Action("Index","Shop")">
+                    <i class="fas fa-pills me-1"></i>All Products <i class="fas fa-chevron-down ms-1" style="font-size:11px;"></i>
+                </a>
+                <div class="nav-dropdown">
+                    @if (ViewBag.Categories != null)
+                    {
+                        foreach (var cat in ViewBag.Categories as List<HVIP.Models.Category>)
+                        {
+                            <a href="@Url.Action("Index","Shop", new { categoryId = cat.Id })">
+                                <i class="@cat.Icon" style="color:@cat.Color"></i> @cat.Name
+                            </a>
+                        }
+                    }
+                </div>
+            </li>
+            <li><a href="@Url.Action("Index","Shop",new{categoryId=1})">Dilutions</a></li>
+            <li><a href="@Url.Action("Index","Shop",new{categoryId=2})">Mother Tinctures</a></li>
+            <li><a href="@Url.Action("Index","Shop",new{categoryId=3})">Biochemic</a></li>
+            <li><a href="@Url.Action("Index","Shop",new{categoryId=4})">Combination</a></li>
+            <li><a href="@Url.Action("Index","Shop",new{categoryId=6})">Hair Care</a></li>
+            <li><a href="@Url.Action("About","Home")">About Us</a></li>
+            <li><a href="@Url.Action("Contact","Home")">Contact</a></li>
+        </ul>
+        <button class="mobile-toggle" onclick="document.getElementById('mainNav').classList.toggle('open')">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</nav>
+
+<!-- PAGE CONTENT -->
+<main>
+    @RenderBody()
+</main>
+
+<!-- NEWSLETTER -->
+<section class="newsletter-section">
+    <div class="container">
+        <div class="row align-items-center gy-3">
+            <div class="col-lg-6">
+                <h3><i class="fas fa-envelope-open-text me-2"></i>Subscribe to Our Newsletter</h3>
+                <p>Get health tips, exclusive offers and product updates straight to your inbox.</p>
+            </div>
+            <div class="col-lg-6 d-flex justify-content-lg-end">
+                <form class="newsletter-form" onsubmit="return false;">
+                    <input type="email" placeholder="Enter your email address..." required />
+                    <button type="submit">SUBSCRIBE</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="main-footer">
+    <div class="container">
+        <div class="row gy-4">
+            <div class="col-lg-3 col-md-6">
+                <h5 class="footer-heading">HVIP Homeopathic</h5>
+                <p style="font-size:13.5px;color:rgba(255,255,255,.7);">
+                    India's trusted homeopathic medicine brand. Quality remedies for natural healing since 1984.
+                    GMP certified and ISO 9001:2015 compliant.
+                </p>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <h5 class="footer-heading">Quick Links</h5>
+                <ul class="footer-links">
+                    <li><a href="@Url.Action("Index","Home")"><i class="fas fa-chevron-right me-1" style="font-size:10px;"></i>Home</a></li>
+                    <li><a href="@Url.Action("Index","Shop")"><i class="fas fa-chevron-right me-1" style="font-size:10px;"></i>Shop</a></li>
+                    <li><a href="@Url.Action("About","Home")"><i class="fas fa-chevron-right me-1" style="font-size:10px;"></i>About Us</a></li>
+                    <li><a href="@Url.Action("Contact","Home")"><i class="fas fa-chevron-right me-1" style="font-size:10px;"></i>Contact</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right me-1" style="font-size:10px;"></i>Track Order</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right me-1" style="font-size:10px;"></i>Return Policy</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <h5 class="footer-heading">Product Categories</h5>
+                <ul class="footer-links">
+                    <li><a href="@Url.Action("Index","Shop",new{categoryId=1})"><i class="fas fa-flask me-1" style="color:#4caf50;font-size:11px;"></i>Dilutions</a></li>
+                    <li><a href="@Url.Action("Index","Shop",new{categoryId=2})"><i class="fas fa-tint me-1" style="color:#4caf50;font-size:11px;"></i>Mother Tinctures</a></li>
+                    <li><a href="@Url.Action("Index","Shop",new{categoryId=3})"><i class="fas fa-tablets me-1" style="color:#4caf50;font-size:11px;"></i>Biochemic Tablets</a></li>
+                    <li><a href="@Url.Action("Index","Shop",new{categoryId=4})"><i class="fas fa-capsules me-1" style="color:#4caf50;font-size:11px;"></i>Combination Remedies</a></li>
+                    <li><a href="@Url.Action("Index","Shop",new{categoryId=5})"><i class="fas fa-fill-drip me-1" style="color:#4caf50;font-size:11px;"></i>Ointments & Creams</a></li>
+                    <li><a href="@Url.Action("Index","Shop",new{categoryId=6})"><i class="fas fa-spa me-1" style="color:#4caf50;font-size:11px;"></i>Hair Care</a></li>
+                    <li><a href="@Url.Action("Index","Shop",new{categoryId=7})"><i class="fas fa-leaf me-1" style="color:#4caf50;font-size:11px;"></i>Skin Care</a></li>
+                    <li><a href="@Url.Action("Index","Shop",new{categoryId=8})"><i class="fas fa-prescription-bottle me-1" style="color:#4caf50;font-size:11px;"></i>Drops & Syrups</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <h5 class="footer-heading">Contact Us</h5>
+                <ul class="footer-contact">
+                    <li><i class="fas fa-map-marker-alt"></i>15, Industrial Area Phase II, New Delhi - 110020, India</li>
+                    <li><i class="fas fa-phone-alt"></i>1800-123-4567 (Toll Free, Mon–Sat 9am–6pm)</li>
+                    <li><i class="fas fa-envelope"></i>info@hvip.com</li>
+                    <li><i class="fas fa-globe"></i>www.hviphomeopathic.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; @DateTime.Now.Year HVIP Homeopathic Pvt. Ltd. All Rights Reserved.</p>
+            <p>Made with <i class="fas fa-heart" style="color:#e53935;"></i> for Natural Healing</p>
+        </div>
+    </div>
+</footer>
+
+<!-- CART TOAST -->
+<div class="cart-toast" id="cartToast"><i class="fas fa-check-circle me-2"></i>Added to Cart!</div>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+
+<script>
+    // Cart AJAX
+    function addToCart(productId, qty) {
+        qty = qty || 1;
+        $.post('/Cart/Add/' + productId, { qty: qty }, function (res) {
+            if (res && res.success) {
+                $('#cartCount').text(res.count);
+                var t = $('#cartToast');
+                t.addClass('show');
+                setTimeout(function () { t.removeClass('show'); }, 2200);
+            }
+        }).fail(function () {
+            window.location.href = '/Cart/Add/' + productId;
+        });
+    }
+
+    // Qty selector
+    function changeQty(delta) {
+        var el = document.getElementById('qtyInput');
+        if (el) { var v = Math.max(1, parseInt(el.value) + delta); el.value = v; }
+    }
+</script>
+
+@RenderSection("scripts", required: false)
 </body>
 </html>
