@@ -1,4 +1,4 @@
-@model HVIP.Models.Cart
+﻿@model HVIP.Models.Cart
 @{
     ViewBag.Title = "Shopping Cart";
 }
@@ -62,7 +62,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="text-center" style="font-weight:600;">₹@item.UnitPrice.ToString("0")</td>
+                                        <td class="text-center" style="font-weight:600;">&#8377;@item.UnitPrice.ToString("0")</td>
                                         <td class="text-center">
                                             <form action="@Url.Action("UpdateQty","Cart")" method="post" class="d-inline">
                                                 @Html.AntiForgeryToken()
@@ -74,7 +74,7 @@
                                                 </div>
                                             </form>
                                         </td>
-                                        <td class="text-center" style="font-weight:700;color:var(--primary-dark);">₹@item.Total.ToString("0")</td>
+                                        <td class="text-center" style="font-weight:700;color:var(--primary-dark);">&#8377;@item.Total.ToString("0")</td>
                                         <td class="text-center">
                                             <a href="@Url.Action("Remove","Cart",new{id=item.ProductId})" class="btn btn-sm btn-outline-danger" title="Remove">
                                                 <i class="fas fa-trash-alt"></i>
@@ -92,17 +92,17 @@
                     <div class="cart-summary-card">
                         <h5 style="color:var(--primary-dark);font-weight:700;margin-bottom:16px;"><i class="fas fa-receipt me-2"></i>Order Summary</h5>
 
-                        <div class="sum-row"><span>Subtotal</span><span>₹@Model.SubTotal.ToString("0")</span></div>
+                        <div class="sum-row"><span>Subtotal</span><span>&#8377;@Model.SubTotal.ToString("0")</span></div>
                         <div class="sum-row">
                             <span>Shipping</span>
                             <span>
                                 @if (Model.Shipping == 0)
                                 { <span style="color:var(--primary);font-weight:600;">FREE</span> }
                                 else
-                                { <span>₹@Model.Shipping.ToString("0")</span> }
+                                { <span>&#8377;@Model.Shipping.ToString("0")</span> }
                             </span>
                         </div>
-                        <div class="sum-row total"><span>Grand Total</span><span>₹@Model.GrandTotal.ToString("0")</span></div>
+                        <div class="sum-row total"><span>Grand Total</span><span>&#8377;@Model.GrandTotal.ToString("0")</span></div>
 
                         <a href="@Url.Action("Index","Checkout")" class="btn-checkout">
                             <i class="fas fa-lock me-2"></i>Proceed to Checkout
@@ -113,7 +113,7 @@
                             var needed = 500 - Model.SubTotal;
                             <div class="free-ship-note">
                                 <i class="fas fa-truck"></i>
-                                Add ₹@needed.ToString("0") more for FREE delivery!
+                                Add &#8377;@needed.ToString("0") more for FREE delivery!
                             </div>
                         }
                         else

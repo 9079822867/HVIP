@@ -1,4 +1,4 @@
-@model HVIP.Models.AdminDashboardViewModel
+﻿@model HVIP.Models.AdminDashboardViewModel
 @{ Layout = "~/Views/Admin/_AdminLayout.cshtml"; ViewBag.Title = "Dashboard"; ViewBag.AdminPage = "dashboard"; }
 
 <!-- Stats Cards -->
@@ -19,7 +19,7 @@
             <div class="admin-stat-body">
                 <div class="admin-stat-num">@Model.TotalOrders</div>
                 <div class="admin-stat-label">Total Orders</div>
-                <div class="admin-stat-sub">₹@Model.TotalRevenue.ToString("N0") revenue</div>
+                <div class="admin-stat-sub">&#8377;@Model.TotalRevenue.ToString("N0") revenue</div>
             </div>
         </div>
     </div>
@@ -82,7 +82,7 @@
                     <tr>
                         <td><strong>#@o.OrderNumber</strong></td>
                         <td>@o.CustomerName<br><small class="text-muted">@o.Email</small></td>
-                        <td><strong>₹@o.GrandTotal.ToString("N0")</strong></td>
+                        <td><strong>&#8377;@o.GrandTotal.ToString("N0")</strong></td>
                         <td>@o.PaymentMethod</td>
                         <td><span class="admin-status-badge @(o.Status=="Confirmed"?"badge-confirmed":"badge-pending")">@o.Status</span></td>
                         <td>@o.OrderDate.ToString("dd MMM yy")</td>

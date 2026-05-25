@@ -1,4 +1,4 @@
-@model List<HVIP.Models.OrderSummary>
+﻿@model List<HVIP.Models.OrderSummary>
 @{ Layout = "~/Views/Admin/_AdminLayout.cshtml"; ViewBag.Title = "Orders"; ViewBag.AdminPage = "orders"; }
 
 <div class="admin-card">
@@ -19,7 +19,7 @@
                         <td><strong>#@o.OrderNumber</strong></td>
                         <td>@o.CustomerName<br><small class="text-muted">@o.Email</small></td>
                         <td><span class="admin-badge">@o.ItemCount items</span></td>
-                        <td><strong>₹@o.GrandTotal.ToString("N0")</strong></td>
+                        <td><strong>&#8377;@o.GrandTotal.ToString("N0")</strong></td>
                         <td>@o.PaymentMethod</td>
                         <td><span class="admin-status-badge @(o.Status=="Confirmed"?"badge-confirmed":o.Status=="Shipped"?"badge-shipped":"badge-pending")">@o.Status</span></td>
                         <td>@o.OrderDate.ToString("dd MMM yy, hh:mm tt")</td>

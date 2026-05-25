@@ -1,4 +1,4 @@
-@model HVIP.Models.ProductFormViewModel
+﻿@model HVIP.Models.ProductFormViewModel
 @{ Layout = "~/Views/Admin/_AdminLayout.cshtml"; ViewBag.AdminPage = "products"; }
 
 <div class="admin-card" style="max-width:860px;">
@@ -31,12 +31,12 @@
                     @Html.TextAreaFor(m => m.Description, new { @class = "admin-input", rows = "4" })
                 </div>
                 <div class="col-md-3">
-                    <label class="admin-label">Price (₹) *</label>
+                    <label class="admin-label">Price (&#8377;) *</label>
                     @Html.TextBoxFor(m => m.Price, new { @class = "admin-input", type = "number", step = "0.01" })
                     @Html.ValidationMessageFor(m => m.Price, "", new { @class = "admin-field-error" })
                 </div>
                 <div class="col-md-3">
-                    <label class="admin-label">Original Price (₹)</label>
+                    <label class="admin-label">Original Price (&#8377;)</label>
                     @Html.TextBoxFor(m => m.OriginalPrice, new { @class = "admin-input", type = "number", step = "0.01", placeholder = "Leave blank if no discount" })
                 </div>
                 <div class="col-md-3">

@@ -1,4 +1,4 @@
-@model List<HVIP.Models.Product>
+﻿@model List<HVIP.Models.Product>
 @{ Layout = "~/Views/Admin/_AdminLayout.cshtml"; ViewBag.Title = "Products"; ViewBag.AdminPage = "products"; }
 
 <div class="admin-card">
@@ -25,8 +25,8 @@
                         </td>
                         <td><span style="color:@p.CategoryColor;font-weight:600;"><i class="@p.CategoryIcon me-1"></i>@p.CategoryName</span></td>
                         <td>
-                            <strong>₹@p.Price</strong>
-                            @if (p.OriginalPrice.HasValue){ <br/><small class="text-muted"><s>₹@p.OriginalPrice</s></small> }
+                            <strong>&#8377;@p.Price</strong>
+                            @if (p.OriginalPrice.HasValue){ <br/><small class="text-muted"><s>&#8377;@p.OriginalPrice</s></small> }
                         </td>
                         <td>@p.Stock</td>
                         <td><span class="admin-toggle @(p.IsFeatured?"on":"off")">@(p.IsFeatured?"Yes":"No")</span></td>
