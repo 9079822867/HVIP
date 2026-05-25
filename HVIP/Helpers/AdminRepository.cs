@@ -22,12 +22,12 @@ namespace HVIP.Helpers
                         if (r.Read()) { vm.TotalProducts = (int)r["TotalP"]; vm.ActiveProducts = (int)r["ActiveP"]; }
                     }
 
-                    Execute(conn, "SELECT COUNT(1) FROM Categories", ref vm.TotalCategories);
-                    Execute(conn, "SELECT COUNT(1) FROM Banners",    ref vm.TotalBanners);
-                    Execute(conn, "SELECT COUNT(1) FROM Orders",     ref vm.TotalOrders);
-                    Execute(conn, "SELECT COUNT(1) FROM Users",      ref vm.TotalUsers);
-                    Execute(conn, "SELECT COUNT(1) FROM ContactMessages", ref vm.TotalMessages);
-                    Execute(conn, "SELECT COUNT(1) FROM ContactMessages WHERE IsRead=0", ref vm.UnreadMessages);
+                    vm.TotalCategories = ExecuteCount(conn, "SELECT COUNT(1) FROM Categories");
+                    vm.TotalBanners    = ExecuteCount(conn, "SELECT COUNT(1) FROM Banners");
+                    vm.TotalOrders     = ExecuteCount(conn, "SELECT COUNT(1) FROM Orders");
+                    vm.TotalUsers      = ExecuteCount(conn, "SELECT COUNT(1) FROM Users");
+                    vm.TotalMessages   = ExecuteCount(conn, "SELECT COUNT(1) FROM ContactMessages");
+                    vm.UnreadMessages  = ExecuteCount(conn, "SELECT COUNT(1) FROM ContactMessages WHERE IsRead=0");
 
                     using (var cmd = new SqlCommand("SELECT ISNULL(SUM(GrandTotal),0) FROM Orders", conn))
                         vm.TotalRevenue = Convert.ToDecimal(cmd.ExecuteScalar());
@@ -58,10 +58,10 @@ namespace HVIP.Helpers
             return vm;
         }
 
-        private static void Execute(SqlConnection conn, string sql, ref int target)
+        private static int ExecuteCount(SqlConnection conn, string sql)
         {
             using (var cmd = new SqlCommand(sql, conn))
-                target = (int)cmd.ExecuteScalar();
+                return (int)cmd.ExecuteScalar();
         }
 
         // ── Product CRUD ──────────────────────────────────────
@@ -165,7 +165,7 @@ namespace HVIP.Helpers
             try
             {
                 using (var conn = DbHelper.GetOpenConnection())
-                using (var cmd  = new SqlCommand(sql, conn))
+                using (var cmd = new SqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@Skip", skip);
                     cmd.Parameters.AddWithValue("@Size", size);
@@ -173,16 +173,17 @@ namespace HVIP.Helpers
                         while (r.Read())
                             list.Add(new OrderSummary
                             {
-                                Id           = (int)r["Id"],
-                                OrderNumber  = r["OrderNumber"]   as string,
-                                CustomerName = r["CustomerName"]  as string,
-                                Email        = r["Email"]         as string,
-                                GrandTotal   = (decimal)r["GrandTotal"],
-                                PaymentMethod= r["PaymentMethod"] as string,
-                                Status       = r["Status"]        as string,
-                                OrderDate    = (DateTime)r["OrderDate"],
-                                ItemCount    = (int)r["ItemCount"]
+                                Id = (int)r["Id"],
+                                OrderNumber = r["OrderNumber"] as string,
+                                CustomerName = r["CustomerName"] as string,
+                                Email = r["Email"] as string,
+                                GrandTotal = (decimal)r["GrandTotal"],
+                                PaymentMethod = r["PaymentMethod"] as string,
+                                Status = r["Status"] as string,
+                                OrderDate = (DateTime)r["OrderDate"],
+                                ItemCount = (int)r["ItemCount"]
                             });
+                }
             }
             catch { }
             return list;
