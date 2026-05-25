@@ -1,0 +1,41 @@
+@model List<HVIP.Models.Banner>
+@{ Layout = "~/Views/Admin/_AdminLayout.cshtml"; ViewBag.Title = "Banners"; ViewBag.AdminPage = "banners"; }
+
+<div class="admin-card">
+    <div class="admin-card-header d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-images me-2"></i>Homepage Banners (@Model.Count)</span>
+        <a href="@Url.Action("BannerAdd","Admin")" class="admin-btn-primary"><i class="fas fa-plus me-1"></i>Add Banner</a>
+    </div>
+    <div class="table-responsive">
+        <table class="admin-table">
+            <thead><tr><th>Preview</th><th>Title</th><th>Badge</th><th>Links</th><th>Sort</th><th>Active</th><th>Actions</th></tr></thead>
+            <tbody>
+                @foreach (var b in Model)
+                {
+                    <tr>
+                        <td>
+                            <div style="width:80px;height:44px;border-radius:6px;background:@b.BgGradient;display:flex;align-items:center;justify-content:center;">
+                                <i class="@b.Icon" style="color:#fff;font-size:18px;"></i>
+                            </div>
+                        </td>
+                        <td style="max-width:200px;font-size:13px;">@Html.Raw(b.Title?.Replace("<br>", " "))</td>
+                        <td><span style="font-size:12px;background:#e8f5e9;padding:3px 8px;border-radius:20px;">@b.BadgeText</span></td>
+                        <td style="font-size:12px;"><a href="@b.PrimaryLink">@b.PrimaryLinkText</a></td>
+                        <td>@b.SortOrder</td>
+                        <td><span class="admin-toggle @(b.IsActive?"on":"off")">@(b.IsActive?"Active":"Hidden")</span></td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <a href="@Url.Action("BannerEdit","Admin",new{id=b.Id})" class="admin-action-btn edit"><i class="fas fa-edit"></i></a>
+                                @using (Html.BeginForm("BannerDelete","Admin",new{id=b.Id},FormMethod.Post,new{@class="d-inline",onsubmit="return confirm('Delete this banner?')"}))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button class="admin-action-btn delete" type="submit"><i class="fas fa-trash"></i></button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

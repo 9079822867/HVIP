@@ -1,0 +1,37 @@
+@model List<HVIP.Models.Category>
+@{ Layout = "~/Views/Admin/_AdminLayout.cshtml"; ViewBag.Title = "Categories"; ViewBag.AdminPage = "categories"; }
+
+<div class="admin-card">
+    <div class="admin-card-header d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-th-large me-2"></i>Categories (@Model.Count)</span>
+        <a href="@Url.Action("CategoryAdd","Admin")" class="admin-btn-primary"><i class="fas fa-plus me-1"></i>Add Category</a>
+    </div>
+    <div class="table-responsive">
+        <table class="admin-table">
+            <thead><tr><th>ID</th><th>Icon</th><th>Name</th><th>Slug</th><th>Color</th><th>Description</th><th>Actions</th></tr></thead>
+            <tbody>
+                @foreach (var c in Model)
+                {
+                    <tr>
+                        <td class="text-muted">@c.Id</td>
+                        <td><i class="@c.Icon" style="font-size:20px;color:@c.Color;"></i></td>
+                        <td><strong>@c.Name</strong></td>
+                        <td><code>@c.Slug</code></td>
+                        <td><span style="display:inline-block;width:22px;height:22px;border-radius:4px;background:@c.Color;vertical-align:middle;"></span> @c.Color</td>
+                        <td style="max-width:220px;font-size:12.5px;">@c.Description</td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <a href="@Url.Action("CategoryEdit","Admin",new{id=c.Id})" class="admin-action-btn edit"><i class="fas fa-edit"></i></a>
+                                @using (Html.BeginForm("CategoryDelete","Admin",new{id=c.Id},FormMethod.Post,new{@class="d-inline",onsubmit="return confirm('Delete category? Products in this category may break.')"}))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button class="admin-action-btn delete" type="submit"><i class="fas fa-trash"></i></button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

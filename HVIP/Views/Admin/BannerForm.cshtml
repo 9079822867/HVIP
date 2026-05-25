@@ -1,0 +1,63 @@
+@model HVIP.Models.Banner
+@{ Layout = "~/Views/Admin/_AdminLayout.cshtml"; ViewBag.AdminPage = "banners"; }
+
+<div class="admin-card" style="max-width:700px;">
+    <div class="admin-card-header"><i class="fas fa-images me-2"></i>@ViewBag.Title</div>
+    <div class="p-4">
+        @using (Html.BeginForm("", "Admin", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="admin-label">Title (HTML allowed, use &lt;span&gt; for highlighted text)</label>
+                    @Html.TextBoxFor(m => m.Title, new { @class = "admin-input", placeholder = "India's Most Trusted<br><span>Homeopathic Medicines</span>" })
+                </div>
+                <div class="col-12">
+                    <label class="admin-label">Subtitle / Description</label>
+                    @Html.TextBoxFor(m => m.Subtitle, new { @class = "admin-input", placeholder = "A short compelling line about this slide" })
+                </div>
+                <div class="col-md-6">
+                    <label class="admin-label">Badge Text (emoji + text)</label>
+                    @Html.TextBoxFor(m => m.BadgeText, new { @class = "admin-input", placeholder = "🌿 Trusted Since 1984" })
+                </div>
+                <div class="col-md-6">
+                    <label class="admin-label">Icon (Font Awesome class)</label>
+                    @Html.TextBoxFor(m => m.Icon, new { @class = "admin-input", placeholder = "fas fa-leaf" })
+                </div>
+                <div class="col-12">
+                    <label class="admin-label">Background Gradient (CSS)</label>
+                    @Html.TextBoxFor(m => m.BgGradient, new { @class = "admin-input", placeholder = "linear-gradient(135deg,#0d4a1e,#1a6e2e)" })
+                    <small class="text-muted">Use <a href="https://cssgradient.io" target="_blank">cssgradient.io</a> to generate gradients</small>
+                </div>
+                <div class="col-md-6">
+                    <label class="admin-label">Primary Button Link</label>
+                    @Html.TextBoxFor(m => m.PrimaryLink, new { @class = "admin-input", placeholder = "/Shop" })
+                </div>
+                <div class="col-md-6">
+                    <label class="admin-label">Primary Button Text</label>
+                    @Html.TextBoxFor(m => m.PrimaryLinkText, new { @class = "admin-input", placeholder = "Shop Now" })
+                </div>
+                <div class="col-md-6">
+                    <label class="admin-label">Secondary Button Link (optional)</label>
+                    @Html.TextBoxFor(m => m.SecondaryLink, new { @class = "admin-input", placeholder = "/Home/About" })
+                </div>
+                <div class="col-md-6">
+                    <label class="admin-label">Secondary Button Text</label>
+                    @Html.TextBoxFor(m => m.SecondaryLinkText, new { @class = "admin-input", placeholder = "Learn More" })
+                </div>
+                <div class="col-md-6">
+                    <label class="admin-label">Sort Order</label>
+                    @Html.TextBoxFor(m => m.SortOrder, new { @class = "admin-input", type = "number" })
+                </div>
+                <div class="col-md-6 d-flex align-items-end pb-1">
+                    <label class="admin-checkbox"><input type="checkbox" name="IsActive" value="true" @(Model.IsActive?"checked":"") /> Active (show on homepage)</label>
+                </div>
+                <div class="col-12 d-flex gap-3">
+                    <button type="submit" class="admin-btn-primary"><i class="fas fa-save me-1"></i>Save Banner</button>
+                    <a href="@Url.Action("Banners","Admin")" class="admin-btn-secondary">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

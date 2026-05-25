@@ -32,7 +32,7 @@ namespace HVIP.Controllers
                 return View(model);
             }
 
-            AuthHelper.SignIn(Session, user.Id, user.Name, user.Email);
+            AuthHelper.SignIn(Session, user.Id, user.Name, user.Email, user.IsAdmin);
             TempData["Welcome"] = "Welcome back, " + user.Name + "! 👋";
 
             if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
@@ -72,7 +72,7 @@ namespace HVIP.Controllers
                 return View(model);
             }
 
-            AuthHelper.SignIn(Session, user.Id, user.Name, user.Email);
+            AuthHelper.SignIn(Session, user.Id, user.Name, user.Email, user.IsAdmin);
             TempData["Welcome"] = "Account created! Welcome to HVIP, " + user.Name + "! 🌿";
             return RedirectToAction("Index", "Home");
         }

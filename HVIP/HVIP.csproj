@@ -121,6 +121,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\CheckoutController.cs" />
@@ -129,7 +130,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\AdminRepository.cs" />
     <Compile Include="Helpers\AuthHelper.cs" />
+    <Compile Include="Helpers\BannerRepository.cs" />
     <Compile Include="Helpers\CartHelper.cs" />
     <Compile Include="Helpers\DbHelper.cs" />
     <Compile Include="Helpers\OrderRepository.cs" />
@@ -139,9 +142,12 @@
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\CheckoutViewModel.cs" />
     <Compile Include="Models\ContactMessage.cs" />
+    <Compile Include="Models\AdminDashboardViewModel.cs" />
+    <Compile Include="Models\Banner.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ProductFormViewModel.cs" />
     <Compile Include="Models\RegisterViewModel.cs" />
     <Compile Include="Models\ShopViewModel.cs" />
     <Compile Include="Models\User.cs" />
@@ -208,6 +214,16 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Account\Profile.cshtml" />
+    <Content Include="Views\Admin\_AdminLayout.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\Products.cshtml" />
+    <Content Include="Views\Admin\ProductForm.cshtml" />
+    <Content Include="Views\Admin\Categories.cshtml" />
+    <Content Include="Views\Admin\CategoryForm.cshtml" />
+    <Content Include="Views\Admin\Banners.cshtml" />
+    <Content Include="Views\Admin\BannerForm.cshtml" />
+    <Content Include="Views\Admin\Orders.cshtml" />
+    <Content Include="Views\Admin\Messages.cshtml" />
     <Content Include="Content\hvip-theme.css" />
   </ItemGroup>
   <ItemGroup>

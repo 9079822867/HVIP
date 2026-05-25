@@ -9,8 +9,9 @@ namespace HVIP.Controllers
         public ActionResult Index()
         {
             ViewBag.FeaturedProducts = ProductCatalog.GetFeatured(8);
-            ViewBag.BestSellers = ProductCatalog.GetBestsellers(6);
-            ViewBag.NewArrivals = ProductCatalog.GetNewArrivals(4);
+            ViewBag.BestSellers      = ProductCatalog.GetBestsellers(6);
+            ViewBag.NewArrivals      = ProductCatalog.GetNewArrivals(4);
+            ViewBag.Banners          = BannerRepository.GetActive();
             return View();
         }
 

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - HVIP Admin</title>
+    @Styles.Render("~/Content/css")
+    <link href="/Content/hvip-theme.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body class="admin-body">
+
+<div class="admin-wrap">
+
+    <!-- ── SIDEBAR ─────────────────────────────────────────── -->
+    <aside class="admin-sidebar" id="adminSidebar">
+        <div class="admin-logo-wrap">
+            <div class="admin-logo-icon"><i class="fas fa-leaf"></i></div>
+            <div>
+                <div class="admin-logo-title">HVIP</div>
+                <div class="admin-logo-sub">Admin Panel</div>
+            </div>
+        </div>
+
+        <nav class="admin-nav">
+            <a href="@Url.Action("Index","Admin")"      class="admin-nav-link @(ViewBag.AdminPage=="dashboard"?"active":"")"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+            <a href="@Url.Action("Products","Admin")"   class="admin-nav-link @(ViewBag.AdminPage=="products"?"active":"")"><i class="fas fa-pills"></i><span>Products</span></a>
+            <a href="@Url.Action("Categories","Admin")" class="admin-nav-link @(ViewBag.AdminPage=="categories"?"active":"")"><i class="fas fa-th-large"></i><span>Categories</span></a>
+            <a href="@Url.Action("Banners","Admin")"    class="admin-nav-link @(ViewBag.AdminPage=="banners"?"active":"")"><i class="fas fa-images"></i><span>Banners</span></a>
+            <a href="@Url.Action("Orders","Admin")"     class="admin-nav-link @(ViewBag.AdminPage=="orders"?"active":"")"><i class="fas fa-shopping-bag"></i><span>Orders</span></a>
+            <a href="@Url.Action("Messages","Admin")"   class="admin-nav-link @(ViewBag.AdminPage=="messages"?"active":"")">
+                <i class="fas fa-envelope"></i><span>Messages</span>
+            </a>
+            <div class="admin-nav-divider"></div>
+            <a href="@Url.Action("Index","Home")"  class="admin-nav-link" target="_blank"><i class="fas fa-external-link-alt"></i><span>View Site</span></a>
+        </nav>
+    </aside>
+
+    <!-- ── MAIN CONTENT ───────────────────────────────────── -->
+    <div class="admin-content">
+
+        <!-- Top bar -->
+        <div class="admin-topbar">
+            <div class="d-flex align-items-center gap-3">
+                <button class="admin-menu-toggle d-lg-none" onclick="document.getElementById('adminSidebar').classList.toggle('open')">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h5 class="admin-page-title mb-0">@ViewBag.Title</h5>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <span style="font-size:13px;color:#666;"><i class="fas fa-user-shield me-1" style="color:var(--primary);"></i>@Session["HVIP_UserName"]</span>
+                @using (Html.BeginForm("Logout","Account",FormMethod.Post,new{@class="m-0"}))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="admin-logout-btn"><i class="fas fa-sign-out-alt me-1"></i>Logout</button>
+                }
+            </div>
+        </div>
+
+        <!-- Alert -->
+        @if (TempData["AdminMsg"] != null)
+        {
+            <div class="admin-alert"><i class="fas fa-check-circle me-2"></i>@TempData["AdminMsg"]</div>
+        }
+
+        <!-- Page Body -->
+        <div class="admin-main">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("scripts", required: false)
+</body>
+</html>

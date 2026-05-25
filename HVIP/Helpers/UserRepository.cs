@@ -23,7 +23,8 @@ namespace HVIP.Helpers
                 Pincode      = r["Pincode"] as string ?? "",
                 RegisteredOn = r["RegisteredOn"] == DBNull.Value
                                   ? DateTime.Now
-                                  : (DateTime)r["RegisteredOn"]
+                                  : (DateTime)r["RegisteredOn"],
+                IsAdmin      = r["IsAdmin"] != DBNull.Value && (bool)r["IsAdmin"]
             };
         }
 

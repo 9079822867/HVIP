@@ -12,6 +12,7 @@ namespace HVIP.Controllers
             ViewBag.CartCount        = CartHelper.GetCart(Session).ItemCount;
             ViewBag.IsLoggedIn       = AuthHelper.IsLoggedIn(Session);
             ViewBag.CurrentUserName  = AuthHelper.GetUserName(Session);
+            ViewBag.IsAdmin          = AuthHelper.IsAdmin(Session);
         }
     }
 }

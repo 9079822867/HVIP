@@ -1,0 +1,51 @@
+@model List<HVIP.Models.Product>
+@{ Layout = "~/Views/Admin/_AdminLayout.cshtml"; ViewBag.Title = "Products"; ViewBag.AdminPage = "products"; }
+
+<div class="admin-card">
+    <div class="admin-card-header d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-pills me-2"></i>All Products (@Model.Count)</span>
+        <a href="@Url.Action("ProductAdd","Admin")" class="admin-btn-primary"><i class="fas fa-plus me-1"></i>Add Product</a>
+    </div>
+    <div class="table-responsive">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th>
+                    <th>Featured</th><th>Bestseller</th><th>New</th><th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td class="text-muted">@p.Id</td>
+                        <td>
+                            <div style="font-weight:600;">@p.Name</div>
+                            <small class="text-muted">@p.Size &bull; @p.Brand</small>
+                        </td>
+                        <td><span style="color:@p.CategoryColor;font-weight:600;"><i class="@p.CategoryIcon me-1"></i>@p.CategoryName</span></td>
+                        <td>
+                            <strong>₹@p.Price</strong>
+                            @if (p.OriginalPrice.HasValue){ <br/><small class="text-muted"><s>₹@p.OriginalPrice</s></small> }
+                        </td>
+                        <td>@p.Stock</td>
+                        <td><span class="admin-toggle @(p.IsFeatured?"on":"off")">@(p.IsFeatured?"Yes":"No")</span></td>
+                        <td><span class="admin-toggle @(p.IsBestseller?"on":"off")">@(p.IsBestseller?"Yes":"No")</span></td>
+                        <td><span class="admin-toggle @(p.IsNew?"on":"off")">@(p.IsNew?"Yes":"No")</span></td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <a href="@Url.Action("ProductEdit","Admin",new{id=p.Id})" class="admin-action-btn edit"><i class="fas fa-edit"></i></a>
+                                @using (Html.BeginForm("ProductDelete","Admin",new{id=p.Id},FormMethod.Post,new{@class="d-inline",onsubmit="return confirm('Delete this product?')"}))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button class="admin-action-btn delete" type="submit"><i class="fas fa-trash"></i></button>
+                                }
+                                <a href="@Url.Action("Details","Shop",new{id=p.Id})" class="admin-action-btn view" target="_blank"><i class="fas fa-eye"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

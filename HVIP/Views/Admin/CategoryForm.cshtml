@@ -1,0 +1,41 @@
+@model HVIP.Models.Category
+@{ Layout = "~/Views/Admin/_AdminLayout.cshtml"; ViewBag.AdminPage = "categories"; }
+
+<div class="admin-card" style="max-width:560px;">
+    <div class="admin-card-header"><i class="fas fa-th-large me-2"></i>@ViewBag.Title</div>
+    <div class="p-4">
+        @using (Html.BeginForm("", "Admin", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
+            <div class="row g-3">
+                <div class="col-12">
+                    <label class="admin-label">Category Name *</label>
+                    @Html.TextBoxFor(m => m.Name, new { @class = "admin-input", placeholder = "e.g. Hair Care" })
+                    @Html.ValidationMessageFor(m => m.Name, "", new { @class = "admin-field-error" })
+                </div>
+                <div class="col-md-6">
+                    <label class="admin-label">Slug</label>
+                    @Html.TextBoxFor(m => m.Slug, new { @class = "admin-input", placeholder = "e.g. hair-care" })
+                </div>
+                <div class="col-md-6">
+                    <label class="admin-label">Color (hex)</label>
+                    @Html.TextBoxFor(m => m.Color, new { @class = "admin-input", placeholder = "#1b5e20", type = "color" })
+                </div>
+                <div class="col-12">
+                    <label class="admin-label">Font Awesome Icon class</label>
+                    @Html.TextBoxFor(m => m.Icon, new { @class = "admin-input", placeholder = "fas fa-pills" })
+                    <small class="text-muted">Visit <a href="https://fontawesome.com/icons" target="_blank">fontawesome.com/icons</a> to find icon classes</small>
+                </div>
+                <div class="col-12">
+                    <label class="admin-label">Description</label>
+                    @Html.TextBoxFor(m => m.Description, new { @class = "admin-input" })
+                </div>
+                <div class="col-12 d-flex gap-3">
+                    <button type="submit" class="admin-btn-primary"><i class="fas fa-save me-1"></i>Save Category</button>
+                    <a href="@Url.Action("Categories","Admin")" class="admin-btn-secondary">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

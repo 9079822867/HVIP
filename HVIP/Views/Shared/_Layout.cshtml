@@ -80,6 +80,13 @@
                         <a href="@Url.Action("Index","Cart")">
                             <i class="fas fa-shopping-bag me-2"></i>My Cart
                         </a>
+                        @if (ViewBag.IsAdmin == true)
+                        {
+                            <div class="user-drop-divider"></div>
+                            <a href="@Url.Action("Index","Admin")" style="color:var(--primary);font-weight:700;">
+                                <i class="fas fa-cog me-2"></i>Admin Panel
+                            </a>
+                        }
                         <div class="user-drop-divider"></div>
                         @using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "m-0" }))
                         {

@@ -1,0 +1,94 @@
+@model HVIP.Models.AdminDashboardViewModel
+@{ Layout = "~/Views/Admin/_AdminLayout.cshtml"; ViewBag.Title = "Dashboard"; ViewBag.AdminPage = "dashboard"; }
+
+<!-- Stats Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="admin-stat-card" style="border-left-color:#1a6e2e;">
+            <div class="admin-stat-icon" style="background:#e8f5e9;color:#1a6e2e;"><i class="fas fa-pills"></i></div>
+            <div class="admin-stat-body">
+                <div class="admin-stat-num">@Model.TotalProducts</div>
+                <div class="admin-stat-label">Total Products</div>
+                <div class="admin-stat-sub">@Model.ActiveProducts active</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="admin-stat-card" style="border-left-color:#0277bd;">
+            <div class="admin-stat-icon" style="background:#e3f2fd;color:#0277bd;"><i class="fas fa-shopping-bag"></i></div>
+            <div class="admin-stat-body">
+                <div class="admin-stat-num">@Model.TotalOrders</div>
+                <div class="admin-stat-label">Total Orders</div>
+                <div class="admin-stat-sub">₹@Model.TotalRevenue.ToString("N0") revenue</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="admin-stat-card" style="border-left-color:#6a1b9a;">
+            <div class="admin-stat-icon" style="background:#f3e5f5;color:#6a1b9a;"><i class="fas fa-users"></i></div>
+            <div class="admin-stat-body">
+                <div class="admin-stat-num">@Model.TotalUsers</div>
+                <div class="admin-stat-label">Registered Users</div>
+                <div class="admin-stat-sub">@Model.TotalCategories categories</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="admin-stat-card" style="border-left-color:#e65100;">
+            <div class="admin-stat-icon" style="background:#fbe9e7;color:#e65100;"><i class="fas fa-envelope"></i></div>
+            <div class="admin-stat-body">
+                <div class="admin-stat-num">@Model.TotalMessages</div>
+                <div class="admin-stat-label">Messages</div>
+                <div class="admin-stat-sub">@Model.UnreadMessages unread</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row g-3 mb-4">
+    <div class="col-12">
+        <div class="admin-card">
+            <div class="admin-card-header"><i class="fas fa-bolt me-2"></i>Quick Actions</div>
+            <div class="d-flex flex-wrap gap-2 p-3">
+                <a href="@Url.Action("ProductAdd","Admin")"  class="admin-quick-btn" style="background:#1a6e2e;"><i class="fas fa-plus me-1"></i>Add Product</a>
+                <a href="@Url.Action("CategoryAdd","Admin")" class="admin-quick-btn" style="background:#0277bd;"><i class="fas fa-plus me-1"></i>Add Category</a>
+                <a href="@Url.Action("BannerAdd","Admin")"   class="admin-quick-btn" style="background:#6a1b9a;"><i class="fas fa-plus me-1"></i>Add Banner</a>
+                <a href="@Url.Action("Orders","Admin")"      class="admin-quick-btn" style="background:#e65100;"><i class="fas fa-list me-1"></i>View Orders</a>
+                <a href="@Url.Action("Messages","Admin")"    class="admin-quick-btn" style="background:#37474f;"><i class="fas fa-envelope me-1"></i>Messages @(Model.UnreadMessages>0 ? "("+Model.UnreadMessages+" new)" : "")</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Orders -->
+<div class="admin-card">
+    <div class="admin-card-header d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-clock me-2"></i>Recent Orders</span>
+        <a href="@Url.Action("Orders","Admin")" class="admin-link">View All</a>
+    </div>
+    <div class="table-responsive">
+        <table class="admin-table">
+            <thead>
+                <tr><th>Order #</th><th>Customer</th><th>Amount</th><th>Payment</th><th>Status</th><th>Date</th></tr>
+            </thead>
+            <tbody>
+                @if (Model.RecentOrders == null || Model.RecentOrders.Count == 0)
+                {
+                    <tr><td colspan="6" class="text-center text-muted py-4">No orders yet</td></tr>
+                }
+                @foreach (var o in Model.RecentOrders ?? new System.Collections.Generic.List<HVIP.Models.OrderSummary>())
+                {
+                    <tr>
+                        <td><strong>#@o.OrderNumber</strong></td>
+                        <td>@o.CustomerName<br><small class="text-muted">@o.Email</small></td>
+                        <td><strong>₹@o.GrandTotal.ToString("N0")</strong></td>
+                        <td>@o.PaymentMethod</td>
+                        <td><span class="admin-status-badge @(o.Status=="Confirmed"?"badge-confirmed":"badge-pending")">@o.Status</span></td>
+                        <td>@o.OrderDate.ToString("dd MMM yy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

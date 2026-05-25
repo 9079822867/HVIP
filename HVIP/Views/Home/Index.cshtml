@@ -1,70 +1,60 @@
 @using HVIP.Models
+@using HVIP.Helpers
 @{
     ViewBag.Title = "Home";
-    var featured  = ViewBag.FeaturedProducts as List<Product> ?? new List<Product>();
-    var bestsellers = ViewBag.BestSellers as List<Product> ?? new List<Product>();
-    var categories  = ViewBag.Categories  as List<Category> ?? new List<Category>();
+    var featured    = ViewBag.FeaturedProducts as List<Product> ?? new List<Product>();
+    var bestsellers = ViewBag.BestSellers  as List<Product>  ?? new List<Product>();
+    var categories  = ViewBag.Categories   as List<Category> ?? new List<Category>();
+    var banners     = ViewBag.Banners      as List<Banner>   ?? new List<Banner>();
 }
 
-<!-- ═══ HERO CAROUSEL ═══════════════════════════════════════════════ -->
+<!-- ═══ HERO CAROUSEL (Dynamic from DB) ═══════════════════════════ -->
 <section class="hero-section">
-    <!-- Slide 1 -->
-    <div class="hero-slide slide-1 active">
-        <div class="hero-icon-bg"><i class="fas fa-leaf"></i></div>
-        <div class="container">
-            <div class="hero-content">
-                <span class="hero-tag">🌿 Trusted Since 1984</span>
-                <h1 class="hero-title">India's Most Trusted<br><span>Homeopathic Medicines</span></h1>
-                <p class="hero-desc">100% authentic, GMP certified homeopathic remedies prepared with scientific precision for natural healing.</p>
-                <div class="hero-actions">
-                    <a href="@Url.Action("Index","Shop")" class="btn-hero-primary">Shop Now</a>
-                    <a href="@Url.Action("About","Home")" class="btn-hero-outline">Learn More</a>
-                </div>
-                <div class="hero-stats">
-                    <div class="hero-stat-item"><div class="hero-stat-num">10L+</div><div class="hero-stat-label">Happy Customers</div></div>
-                    <div class="hero-stat-item"><div class="hero-stat-num">31+</div><div class="hero-stat-label">Products</div></div>
-                    <div class="hero-stat-item"><div class="hero-stat-num">40+</div><div class="hero-stat-label">Years Experience</div></div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Slide 2 -->
-    <div class="hero-slide slide-2">
-        <div class="hero-icon-bg"><i class="fas fa-tint"></i></div>
-        <div class="container">
-            <div class="hero-content">
-                <span class="hero-tag">🔬 Scientifically Prepared</span>
-                <h1 class="hero-title">Complete Range of<br><span>Mother Tinctures & Dilutions</span></h1>
-                <p class="hero-desc">From Arnica to Calendula — explore our full catalog of classical homeopathic preparations for every ailment.</p>
-                <div class="hero-actions">
-                    <a href="@Url.Action("Index","Shop",new{categoryId=2})" class="btn-hero-primary">Mother Tinctures</a>
-                    <a href="@Url.Action("Index","Shop",new{categoryId=1})" class="btn-hero-outline">View Dilutions</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Slide 3 -->
-    <div class="hero-slide slide-3">
-        <div class="hero-icon-bg"><i class="fas fa-shipping-fast"></i></div>
-        <div class="container">
-            <div class="hero-content">
-                <span class="hero-tag">🚚 Fast Delivery</span>
-                <h1 class="hero-title">Free Delivery<br><span>On Orders Above ₹500</span></h1>
-                <p class="hero-desc">Get your medicines delivered to your doorstep across India within 3–5 business days. Pan-India shipping available.</p>
-                <div class="hero-actions">
-                    <a href="@Url.Action("Index","Shop")" class="btn-hero-primary">Order Now</a>
-                    <a href="@Url.Action("Contact","Home")" class="btn-hero-outline">Contact Us</a>
+    @for (int i = 0; i < banners.Count; i++)
+    {
+        var b = banners[i];
+        <div class="hero-slide @(i==0?"active":"")" style="background:@b.BgGradient;">
+            <div class="hero-icon-bg"><i class="@b.Icon"></i></div>
+            <div class="container">
+                <div class="hero-content">
+                    @if (!string.IsNullOrEmpty(b.BadgeText))
+                    {
+                        <span class="hero-tag">@b.BadgeText</span>
+                    }
+                    <h1 class="hero-title">@Html.Raw(b.Title)</h1>
+                    @if (!string.IsNullOrEmpty(b.Subtitle))
+                    {
+                        <p class="hero-desc">@b.Subtitle</p>
+                    }
+                    <div class="hero-actions">
+                        @if (!string.IsNullOrEmpty(b.PrimaryLink))
+                        {
+                            <a href="@b.PrimaryLink" class="btn-hero-primary">@b.PrimaryLinkText</a>
+                        }
+                        @if (!string.IsNullOrEmpty(b.SecondaryLink))
+                        {
+                            <a href="@b.SecondaryLink" class="btn-hero-outline">@b.SecondaryLinkText</a>
+                        }
+                    </div>
+                    @if (i == 0)
+                    {
+                        <div class="hero-stats">
+                            <div class="hero-stat-item"><div class="hero-stat-num">10L+</div><div class="hero-stat-label">Happy Customers</div></div>
+                            <div class="hero-stat-item"><div class="hero-stat-num">31+</div><div class="hero-stat-label">Products</div></div>
+                            <div class="hero-stat-item"><div class="hero-stat-num">40+</div><div class="hero-stat-label">Years Experience</div></div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Controls -->
+    }
     <button class="carousel-btn carousel-prev" onclick="prevSlide()"><i class="fas fa-chevron-left"></i></button>
     <button class="carousel-btn carousel-next" onclick="nextSlide()"><i class="fas fa-chevron-right"></i></button>
     <div class="carousel-dots">
-        <button class="dot active" onclick="goSlide(0)"></button>
-        <button class="dot" onclick="goSlide(1)"></button>
-        <button class="dot" onclick="goSlide(2)"></button>
+        @for (int i = 0; i < banners.Count; i++)
+        {
+            <button class="dot @(i==0?"active":"")" onclick="goSlide(@i)"></button>
+        }
     </div>
 </section>
 
