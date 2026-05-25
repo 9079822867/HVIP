@@ -8,8 +8,10 @@ namespace HVIP.Controllers
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             base.OnActionExecuting(filterContext);
-            ViewBag.Categories = ProductCatalog.GetCategories();
-            ViewBag.CartCount = CartHelper.GetCart(Session).ItemCount;
+            ViewBag.Categories       = ProductCatalog.GetCategories();
+            ViewBag.CartCount        = CartHelper.GetCart(Session).ItemCount;
+            ViewBag.IsLoggedIn       = AuthHelper.IsLoggedIn(Session);
+            ViewBag.CurrentUserName  = AuthHelper.GetUserName(Session);
         }
     }
 }
