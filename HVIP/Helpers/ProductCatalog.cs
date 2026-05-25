@@ -1,92 +1,226 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Data.SqlClient;
 using HVIP.Models;
 
 namespace HVIP.Helpers
 {
+    /// <summary>
+    /// Product and Category data access — reads from SQL Server (HVIPDB).
+    /// All public method signatures are unchanged so controllers need no edits.
+    /// </summary>
     public static class ProductCatalog
     {
-        private static readonly List<Category> _categories = new List<Category>
+        // ══════════════════════════════════════════════════════
+        //  Private mappers
+        // ══════════════════════════════════════════════════════
+
+        private static Category MapCategory(SqlDataReader r)
         {
-            new Category { Id=1, Name="Dilutions",            Slug="dilutions",           Icon="fas fa-flask",                Color="#1b5e20", Description="Classical homeopathic dilutions in various potencies" },
-            new Category { Id=2, Name="Mother Tinctures",     Slug="mother-tinctures",    Icon="fas fa-tint",                 Color="#2e7d32", Description="Plant-based mother tinctures (Q potency)" },
-            new Category { Id=3, Name="Biochemic Tablets",    Slug="biochemic-tablets",   Icon="fas fa-tablets",              Color="#00695c", Description="12 tissue salts for biochemic therapy" },
-            new Category { Id=4, Name="Combination Remedies", Slug="combination",         Icon="fas fa-capsules",             Color="#0277bd", Description="Multi-ingredient drops for specific ailments" },
-            new Category { Id=5, Name="Ointments & Creams",   Slug="ointments-creams",    Icon="fas fa-fill-drip",            Color="#e65100", Description="Topical homeopathic preparations" },
-            new Category { Id=6, Name="Hair Care",            Slug="hair-care",           Icon="fas fa-spa",                  Color="#4e342e", Description="Arnica-based hair care products" },
-            new Category { Id=7, Name="Skin Care",            Slug="skin-care",           Icon="fas fa-leaf",                 Color="#880e4f", Description="Natural skin care solutions" },
-            new Category { Id=8, Name="Drops & Syrups",       Slug="drops-syrups",        Icon="fas fa-prescription-bottle",  Color="#4a148c", Description="Liquid homeopathic preparations" },
-        };
+            return new Category
+            {
+                Id          = (int)r["Id"],
+                Name        = r["Name"]        as string ?? "",
+                Slug        = r["Slug"]        as string ?? "",
+                Icon        = r["Icon"]        as string ?? "fas fa-pills",
+                Color       = r["Color"]       as string ?? "#1b5e20",
+                Description = r["Description"] as string ?? ""
+            };
+        }
 
-        private static readonly List<Product> _products = new List<Product>
+        private static Product MapProduct(SqlDataReader r)
         {
-            // ─── DILUTIONS ─────────────────────────────────────────────────────────
-            new Product { Id=1,  Name="Aconite Napellus 30C",      ShortDescription="For sudden fever, anxiety & shock",             Description="Indicated for sudden onset after exposure to cold wind. Effective for high fever, intense fear, restlessness and acute anxiety attacks.",                                               Price=85m,  OriginalPrice=100m, CategoryId=1, CategoryName="Dilutions",            CategoryIcon="fas fa-flask",                CategoryColor="#1b5e20", Brand="HVIP", Stock=150, IsFeatured=true,  IsBestseller=true,  Rating=4.5, ReviewCount=128, Size="30ml" },
-            new Product { Id=2,  Name="Arnica Montana 30C",         ShortDescription="For bruises, injuries & muscle soreness",       Description="The most widely used homeopathic remedy for trauma, bruising and muscle soreness. Excellent after physical exertion, falls and surgery.",                                        Price=90m,  OriginalPrice=110m, CategoryId=1, CategoryName="Dilutions",            CategoryIcon="fas fa-flask",                CategoryColor="#1b5e20", Brand="HVIP", Stock=200, IsFeatured=true,  IsBestseller=false, Rating=4.7, ReviewCount=245, Size="30ml" },
-            new Product { Id=3,  Name="Belladonna 30C",             ShortDescription="For sudden high fever with redness",            Description="Prescribed for sudden violent fever with flushed face, throbbing headache, extreme sensitivity to light and dryness.",                                                          Price=80m,  OriginalPrice=null, CategoryId=1, CategoryName="Dilutions",            CategoryIcon="fas fa-flask",                CategoryColor="#1b5e20", Brand="HVIP", Stock=175, IsFeatured=false, IsBestseller=true,  Rating=4.3, ReviewCount=89,  Size="30ml" },
-            new Product { Id=4,  Name="Calcarea Carb 200C",         ShortDescription="Constitutional remedy for slow metabolism",      Description="Deep constitutional remedy for obesity, profuse sweating of the head, delayed developmental milestones and weak bones in children.",                                             Price=95m,  OriginalPrice=115m, CategoryId=1, CategoryName="Dilutions",            CategoryIcon="fas fa-flask",                CategoryColor="#1b5e20", Brand="HVIP", Stock=120, IsFeatured=true,  IsBestseller=false, Rating=4.6, ReviewCount=156, Size="30ml" },
-            new Product { Id=5,  Name="Nux Vomica 30C",             ShortDescription="For digestive disorders & irritability",         Description="Indicated for digestive troubles from overeating, constipation, irritability and over-sensitivity to external stimuli.",                                                       Price=80m,  OriginalPrice=null, CategoryId=1, CategoryName="Dilutions",            CategoryIcon="fas fa-flask",                CategoryColor="#1b5e20", Brand="HVIP", Stock=190, IsFeatured=false, IsBestseller=true,  Rating=4.4, ReviewCount=112, Size="30ml" },
-            new Product { Id=6,  Name="Pulsatilla 30C",             ShortDescription="For changeable symptoms, mild temperament",      Description="A polychrest remedy for weeping tendency, changeable symptoms and conditions aggravated by warmth and improved in open air.",                                                  Price=85m,  OriginalPrice=null, CategoryId=1, CategoryName="Dilutions",            CategoryIcon="fas fa-flask",                CategoryColor="#1b5e20", Brand="HVIP", Stock=165, IsFeatured=false, IsBestseller=false, Rating=4.2, ReviewCount=74,  Size="30ml" },
-            new Product { Id=7,  Name="Rhus Tox 30C",               ShortDescription="For joint pain worse in cold damp weather",      Description="The leading remedy for joint stiffness and pain that is worse on first motion but improves with continued movement. Excellent for arthritis.",                                  Price=85m,  OriginalPrice=100m, CategoryId=1, CategoryName="Dilutions",            CategoryIcon="fas fa-flask",                CategoryColor="#1b5e20", Brand="HVIP", Stock=210, IsFeatured=true,  IsBestseller=false, Rating=4.5, ReviewCount=198, Size="30ml" },
+            return new Product
+            {
+                Id               = (int)r["Id"],
+                Name             = r["Name"]             as string ?? "",
+                ShortDescription = r["ShortDescription"] as string ?? "",
+                Description      = r["Description"]      as string ?? "",
+                Price            = (decimal)r["Price"],
+                OriginalPrice    = r["OriginalPrice"] == DBNull.Value
+                                       ? (decimal?)null
+                                       : (decimal)r["OriginalPrice"],
+                ImageUrl         = r["ImageUrl"]      as string,
+                CategoryId       = (int)r["CategoryId"],
+                CategoryName     = r["CategoryName"]  as string ?? "",
+                CategoryIcon     = r["CategoryIcon"]  as string ?? "fas fa-pills",
+                CategoryColor    = r["CategoryColor"] as string ?? "#1b5e20",
+                Brand            = r["Brand"]         as string ?? "HVIP",
+                Stock            = (int)r["Stock"],
+                IsFeatured       = r["IsFeatured"]   != DBNull.Value && (bool)r["IsFeatured"],
+                IsBestseller     = r["IsBestseller"] != DBNull.Value && (bool)r["IsBestseller"],
+                IsNew            = r["IsNew"]         != DBNull.Value && (bool)r["IsNew"],
+                Rating           = r["Rating"]   == DBNull.Value ? 4.0 : Convert.ToDouble(r["Rating"]),
+                ReviewCount      = r["ReviewCount"] == DBNull.Value ? 0 : (int)r["ReviewCount"],
+                Size             = r["Size"] as string ?? ""
+            };
+        }
 
-            // ─── MOTHER TINCTURES ──────────────────────────────────────────────────
-            new Product { Id=8,  Name="Calendula Officinalis Q",    ShortDescription="Wound healing & antiseptic",                    Description="A powerful antiseptic and wound healer. Used internally and topically for cuts, wounds, ulcers and skin infections. Promotes rapid granulation.",                                Price=150m, OriginalPrice=180m, CategoryId=2, CategoryName="Mother Tinctures",     CategoryIcon="fas fa-tint",                 CategoryColor="#2e7d32", Brand="HVIP", Stock=140, IsFeatured=true,  IsBestseller=true,  Rating=4.8, ReviewCount=312, Size="30ml" },
-            new Product { Id=9,  Name="Echinacea Purpurea Q",       ShortDescription="Immunity booster, anti-infective",              Description="Widely used to boost immune system function and fight infections. Effective for recurring colds, flu and low-grade fevers.",                                                  Price=180m, OriginalPrice=null, CategoryId=2, CategoryName="Mother Tinctures",     CategoryIcon="fas fa-tint",                 CategoryColor="#2e7d32", Brand="HVIP", Stock=125, IsFeatured=false, IsBestseller=false, Rating=4.5, ReviewCount=87,  Size="30ml" },
-            new Product { Id=10, Name="Thuja Occidentalis Q",        ShortDescription="For warts, skin growths & polyps",              Description="Used for warts, condylomata, polyps and skin growths. Also effective for vaccination-related complaints and sycotic conditions.",                                             Price=160m, OriginalPrice=200m, CategoryId=2, CategoryName="Mother Tinctures",     CategoryIcon="fas fa-tint",                 CategoryColor="#2e7d32", Brand="HVIP", Stock=100, IsFeatured=true,  IsBestseller=false, Rating=4.3, ReviewCount=65,  Size="30ml" },
-            new Product { Id=11, Name="Berberis Vulgaris Q",         ShortDescription="Kidney stones & urinary complaints",            Description="Primary remedy for kidney stones, renal colic and urinary tract issues with radiating burning pain.",                                                                        Price=170m, OriginalPrice=null, CategoryId=2, CategoryName="Mother Tinctures",     CategoryIcon="fas fa-tint",                 CategoryColor="#2e7d32", Brand="HVIP", Stock=145, IsFeatured=false, IsBestseller=true,  Rating=4.6, ReviewCount=143, Size="30ml" },
+        // Base SELECT with joined category columns
+        private const string ProductSelect = @"
+            SELECT p.*, c.Name AS CategoryName, c.Icon AS CategoryIcon, c.Color AS CategoryColor
+            FROM   Products  p
+            JOIN   Categories c ON c.Id = p.CategoryId
+            WHERE  p.IsActive = 1";
 
-            // ─── BIOCHEMIC TABLETS ─────────────────────────────────────────────────
-            new Product { Id=12, Name="Ferrum Phosphoricum 6X",      ShortDescription="First stage of inflammation & fever",           Description="First aid biochemic salt for early stages of inflammation, fever and infections. Supports oxygen transport in the blood.",                                                    Price=95m,  OriginalPrice=null, CategoryId=3, CategoryName="Biochemic Tablets",    CategoryIcon="fas fa-tablets",              CategoryColor="#00695c", Brand="HVIP", Stock=230, IsFeatured=false, IsBestseller=true,  Rating=4.4, ReviewCount=178, Size="25g"  },
-            new Product { Id=13, Name="Kali Phosphoricum 6X",         ShortDescription="Nerve tonic for mental fatigue",                Description="The nerve tissue salt for nervous exhaustion, mental fatigue, anxiety, depression and poor memory. Essential for students and professionals.",                                Price=95m,  OriginalPrice=null, CategoryId=3, CategoryName="Biochemic Tablets",    CategoryIcon="fas fa-tablets",              CategoryColor="#00695c", Brand="HVIP", Stock=195, IsFeatured=true,  IsBestseller=false, Rating=4.6, ReviewCount=134, Size="25g"  },
-            new Product { Id=14, Name="Magnesia Phosphorica 6X",      ShortDescription="Cramps, spasms & neuralgic pain",               Description="The antispasmodic biochemic salt. Used for muscle cramps, menstrual cramps, colic and shooting neuralgic pains relieved by heat.",                                          Price=90m,  OriginalPrice=110m, CategoryId=3, CategoryName="Biochemic Tablets",    CategoryIcon="fas fa-tablets",              CategoryColor="#00695c", Brand="HVIP", Stock=180, IsFeatured=true,  IsBestseller=false, Rating=4.5, ReviewCount=96,  Size="25g"  },
-            new Product { Id=15, Name="Natrum Muriaticum 6X",          ShortDescription="Water balance & dry mucous membranes",          Description="Regulates body fluids. Used for headaches, cold sores, dry skin and hay fever with watery discharge.",                                                                       Price=95m,  OriginalPrice=null, CategoryId=3, CategoryName="Biochemic Tablets",    CategoryIcon="fas fa-tablets",              CategoryColor="#00695c", Brand="HVIP", Stock=210, IsFeatured=false, IsBestseller=false, Rating=4.3, ReviewCount=67,  Size="25g"  },
-            new Product { Id=16, Name="Calcarea Phosphorica 6X",       ShortDescription="Bone health & growing pains",                   Description="Strengthens bones and teeth, aids calcium absorption. Used for growing pains, delayed teething and fracture healing.",                                                       Price=90m,  OriginalPrice=null, CategoryId=3, CategoryName="Biochemic Tablets",    CategoryIcon="fas fa-tablets",              CategoryColor="#00695c", Brand="HVIP", Stock=165, IsFeatured=false, IsBestseller=false, Rating=4.2, ReviewCount=54,  Size="25g"  },
+        private static List<Product> QueryProducts(string sql, SqlParameter[] parms = null)
+        {
+            var list = new List<Product>();
+            try
+            {
+                using (var conn = DbHelper.GetOpenConnection())
+                using (var cmd  = new SqlCommand(sql, conn))
+                {
+                    if (parms != null) cmd.Parameters.AddRange(parms);
+                    using (var r = cmd.ExecuteReader())
+                        while (r.Read()) list.Add(MapProduct(r));
+                }
+            }
+            catch { /* return empty list on DB error */ }
+            return list;
+        }
 
-            // ─── COMBINATION REMEDIES ──────────────────────────────────────────────
-            new Product { Id=17, Name="HVIP Febin Drops",             ShortDescription="For cold, cough and mild fever",                Description="A combination remedy for common cold, cough, runny nose and mild fever. Safe and effective for adults and children above 2 years.",                                         Price=120m, OriginalPrice=145m, CategoryId=4, CategoryName="Combination Remedies", CategoryIcon="fas fa-capsules",             CategoryColor="#0277bd", Brand="HVIP", Stock=320, IsFeatured=true,  IsBestseller=true,  Rating=4.6, ReviewCount=267, Size="30ml" },
-            new Product { Id=18, Name="HVIP Stresswin Drops",          ShortDescription="For stress, anxiety & sleeplessness",           Description="Helps manage stress, anxiety, nervous tension and insomnia. A safe, non-habit forming natural remedy for modern lifestyle stress.",                                          Price=135m, OriginalPrice=null, CategoryId=4, CategoryName="Combination Remedies", CategoryIcon="fas fa-capsules",             CategoryColor="#0277bd", Brand="HVIP", Stock=215, IsFeatured=false, IsBestseller=true,  Rating=4.7, ReviewCount=198, Size="30ml" },
-            new Product { Id=19, Name="HVIP Diabonil Drops",           ShortDescription="Blood sugar management support",                Description="Supports healthy blood sugar levels as a complementary treatment for type 2 diabetes management. Contains Syzygium, Gymnema and other key remedies.",                       Price=140m, OriginalPrice=165m, CategoryId=4, CategoryName="Combination Remedies", CategoryIcon="fas fa-capsules",             CategoryColor="#0277bd", Brand="HVIP", Stock=180, IsFeatured=true,  IsBestseller=false, Rating=4.4, ReviewCount=123, Size="30ml" },
+        // ══════════════════════════════════════════════════════
+        //  Categories
+        // ══════════════════════════════════════════════════════
 
-            // ─── OINTMENTS & CREAMS ────────────────────────────────────────────────
-            new Product { Id=20, Name="HVIP Calendula Ointment",       ShortDescription="Antiseptic cream for cuts & wounds",            Description="Natural antiseptic preparation promoting wound healing. Excellent for cuts, abrasions, burns and skin irritations. Soothes and repairs.",                                    Price=130m, OriginalPrice=155m, CategoryId=5, CategoryName="Ointments & Creams",   CategoryIcon="fas fa-fill-drip",            CategoryColor="#e65100", Brand="HVIP", Stock=145, IsFeatured=false, IsBestseller=true,  Rating=4.7, ReviewCount=289, Size="25g"  },
-            new Product { Id=21, Name="HVIP Arnica Ointment",           ShortDescription="For bruises, sprains & muscle pain",            Description="Provides relief from bruises, sprains, muscle soreness and joint pains. An essential first-aid ointment for every home.",                                                  Price=125m, OriginalPrice=null, CategoryId=5, CategoryName="Ointments & Creams",   CategoryIcon="fas fa-fill-drip",            CategoryColor="#e65100", Brand="HVIP", Stock=190, IsFeatured=true,  IsBestseller=false, Rating=4.5, ReviewCount=176, Size="25g"  },
-            new Product { Id=22, Name="HVIP Clear Face Cream",          ShortDescription="Homeopathic acne & pimple control cream",        Description="With Calendula and Thuja, helps clear acne, pimples and blemishes. Reduces oiliness and improves skin texture. Suitable for oily skin.",                                 Price=195m, OriginalPrice=220m, CategoryId=5, CategoryName="Ointments & Creams",   CategoryIcon="fas fa-fill-drip",            CategoryColor="#e65100", Brand="HVIP", Stock=250, IsFeatured=true,  IsBestseller=true,  Rating=4.8, ReviewCount=412, Size="25g"  },
+        public static List<Category> GetCategories()
+        {
+            var list = new List<Category>();
+            try
+            {
+                const string sql = "SELECT * FROM Categories ORDER BY SortOrder, Id";
+                using (var conn = DbHelper.GetOpenConnection())
+                using (var cmd  = new SqlCommand(sql, conn))
+                using (var r    = cmd.ExecuteReader())
+                    while (r.Read()) list.Add(MapCategory(r));
+            }
+            catch { }
+            return list;
+        }
 
-            // ─── HAIR CARE ─────────────────────────────────────────────────────────
-            new Product { Id=23, Name="HVIP Arnica Hair Oil",           ShortDescription="Prevents hair fall, promotes growth",           Description="Arnica Montana Hair Oil with essential nutrients reduces hair fall, promotes growth, prevents premature greying and nourishes the scalp.",                                  Price=210m, OriginalPrice=250m, CategoryId=6, CategoryName="Hair Care",            CategoryIcon="fas fa-spa",                  CategoryColor="#4e342e", Brand="HVIP", Stock=310, IsFeatured=true,  IsBestseller=true,  Rating=4.9, ReviewCount=523, Size="100ml", IsNew=true  },
-            new Product { Id=24, Name="HVIP Hair Vitalizer",             ShortDescription="Scalp nourishment & dandruff control",          Description="Nourishes the scalp, strengthens hair roots and prevents dandruff. Contains Arnica, Thuja, Cantharis and other botanical extracts.",                                    Price=285m, OriginalPrice=320m, CategoryId=6, CategoryName="Hair Care",            CategoryIcon="fas fa-spa",                  CategoryColor="#4e342e", Brand="HVIP", Stock=195, IsFeatured=false, IsBestseller=true,  Rating=4.6, ReviewCount=287, Size="100ml" },
-            new Product { Id=25, Name="HVIP Arnica Shampoo",             ShortDescription="Gentle cleansing, reduces hair fall",           Description="Arnica-enriched herbal shampoo for daily use. Cleanses without stripping natural oils, reduces hair fall and promotes lustrous hair.",                                   Price=175m, OriginalPrice=210m, CategoryId=6, CategoryName="Hair Care",            CategoryIcon="fas fa-spa",                  CategoryColor="#4e342e", Brand="HVIP", Stock=220, IsFeatured=false, IsBestseller=false, Rating=4.4, ReviewCount=165, Size="200ml" },
+        public static Category GetCategory(int id)
+        {
+            try
+            {
+                const string sql = "SELECT * FROM Categories WHERE Id = @Id";
+                using (var conn = DbHelper.GetOpenConnection())
+                using (var cmd  = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    using (var r = cmd.ExecuteReader())
+                        return r.Read() ? MapCategory(r) : null;
+                }
+            }
+            catch { return null; }
+        }
 
-            // ─── SKIN CARE ─────────────────────────────────────────────────────────
-            new Product { Id=26, Name="HVIP Aloe Vera Gel",             ShortDescription="Soothing moisturizer for all skin types",        Description="Aloe Vera Gel with homeopathic extracts provides deep moisture, soothes sunburn and helps heal skin irritations and minor wounds.",                                     Price=175m, OriginalPrice=null, CategoryId=7, CategoryName="Skin Care",            CategoryIcon="fas fa-leaf",                 CategoryColor="#880e4f", Brand="HVIP", Stock=275, IsFeatured=true,  IsBestseller=false, Rating=4.5, ReviewCount=163, Size="150ml", IsNew=true  },
-            new Product { Id=27, Name="HVIP Sunscreen SPF30",            ShortDescription="UV protection with natural ingredients",         Description="Broad-spectrum SPF30 sunscreen with Calendula and Berberis. Protects from UVA/UVB while nourishing the skin naturally.",                                                Price=220m, OriginalPrice=265m, CategoryId=7, CategoryName="Skin Care",            CategoryIcon="fas fa-leaf",                 CategoryColor="#880e4f", Brand="HVIP", Stock=190, IsFeatured=true,  IsBestseller=false, Rating=4.3, ReviewCount=98,  Size="50ml"  },
+        // ══════════════════════════════════════════════════════
+        //  Products
+        // ══════════════════════════════════════════════════════
 
-            // ─── DROPS & SYRUPS ────────────────────────────────────────────────────
-            new Product { Id=28, Name="HVIP Ocudrops Eye Drops",         ShortDescription="For eye fatigue, redness & irritation",         Description="Provides relief from digital eye strain, redness, irritation and dryness. Safe for regular use by screen users.",                                                        Price=115m, OriginalPrice=null, CategoryId=8, CategoryName="Drops & Syrups",       CategoryIcon="fas fa-prescription-bottle",  CategoryColor="#4a148c", Brand="HVIP", Stock=155, IsFeatured=false, IsBestseller=false, Rating=4.4, ReviewCount=112, Size="10ml"  },
-            new Product { Id=29, Name="HVIP Immunoboost Syrup",           ShortDescription="Builds immunity, prevents infections",          Description="Strengthens the immune system, helps prevent recurring infections and improves overall vitality. Contains Echinacea, Baptisia and key immune-supportive remedies.",      Price=150m, OriginalPrice=175m, CategoryId=8, CategoryName="Drops & Syrups",       CategoryIcon="fas fa-prescription-bottle",  CategoryColor="#4a148c", Brand="HVIP", Stock=230, IsFeatured=true,  IsBestseller=true,  Rating=4.7, ReviewCount=345, Size="100ml" },
-            new Product { Id=30, Name="HVIP Digyton Drops",               ShortDescription="For indigestion, bloating & acidity",           Description="Treats indigestion, flatulence, bloating and gastric discomfort. A comprehensive digestive formula with Nux Vomica, Carbo Veg and Lycopodium.",                       Price=125m, OriginalPrice=145m, CategoryId=8, CategoryName="Drops & Syrups",       CategoryIcon="fas fa-prescription-bottle",  CategoryColor="#4a148c", Brand="HVIP", Stock=180, IsFeatured=true,  IsBestseller=false, Rating=4.5, ReviewCount=187, Size="30ml"  },
-            new Product { Id=31, Name="HVIP Sleepzyme Drops",             ShortDescription="Natural sleep aid, no side effects",            Description="Promotes restful sleep naturally. Contains Coffea Cruda, Passiflora and Valeriana for safe, effective sleep support without dependency.",                               Price=135m, OriginalPrice=null, CategoryId=8, CategoryName="Drops & Syrups",       CategoryIcon="fas fa-prescription-bottle",  CategoryColor="#4a148c", Brand="HVIP", Stock=165, IsFeatured=false, IsBestseller=false, Rating=4.6, ReviewCount=134, Size="30ml",  IsNew=true  },
-        };
+        public static List<Product> GetAll()
+        {
+            return QueryProducts(ProductSelect + " ORDER BY p.Id");
+        }
 
-        public static List<Category> GetCategories() => new List<Category>(_categories);
-        public static Category GetCategory(int id) => _categories.FirstOrDefault(c => c.Id == id);
+        public static Product GetById(int id)
+        {
+            try
+            {
+                string sql = ProductSelect + " AND p.Id = @Id";
+                using (var conn = DbHelper.GetOpenConnection())
+                using (var cmd  = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    using (var r = cmd.ExecuteReader())
+                        return r.Read() ? MapProduct(r) : null;
+                }
+            }
+            catch { return null; }
+        }
 
-        public static List<Product> GetAll() => new List<Product>(_products);
-        public static Product GetById(int id) => _products.FirstOrDefault(p => p.Id == id);
+        public static List<Product> GetFeatured(int count = 8)
+        {
+            string sql = ProductSelect + $" AND p.IsFeatured = 1 ORDER BY p.Rating DESC, p.ReviewCount DESC OFFSET 0 ROWS FETCH NEXT {count} ROWS ONLY";
+            return QueryProducts(sql);
+        }
 
-        public static List<Product> GetFeatured(int count = 8) =>
-            _products.Where(p => p.IsFeatured).Take(count).ToList();
+        public static List<Product> GetBestsellers(int count = 6)
+        {
+            string sql = ProductSelect + $" AND p.IsBestseller = 1 ORDER BY p.ReviewCount DESC OFFSET 0 ROWS FETCH NEXT {count} ROWS ONLY";
+            return QueryProducts(sql);
+        }
 
-        public static List<Product> GetBestsellers(int count = 6) =>
-            _products.Where(p => p.IsBestseller).Take(count).ToList();
+        public static List<Product> GetNewArrivals(int count = 4)
+        {
+            string sql = ProductSelect + $" AND p.IsNew = 1 ORDER BY p.Id DESC OFFSET 0 ROWS FETCH NEXT {count} ROWS ONLY";
+            return QueryProducts(sql);
+        }
 
-        public static List<Product> GetNewArrivals(int count = 4) =>
-            _products.Where(p => p.IsNew).Take(count).ToList();
+        public static List<Product> GetByCategory(int categoryId)
+        {
+            string sql = ProductSelect + " AND p.CategoryId = @CatId ORDER BY p.IsFeatured DESC, p.Rating DESC";
+            return QueryProducts(sql, new[] { new SqlParameter("@CatId", categoryId) });
+        }
 
-        public static List<Product> GetByCategory(int categoryId) =>
-            _products.Where(p => p.CategoryId == categoryId).ToList();
+        public static List<Product> GetRelated(int productId, int categoryId, int count = 4)
+        {
+            string sql = ProductSelect + $" AND p.CategoryId = @CatId AND p.Id <> @PId ORDER BY p.Rating DESC OFFSET 0 ROWS FETCH NEXT {count} ROWS ONLY";
+            return QueryProducts(sql, new[]
+            {
+                new SqlParameter("@CatId", categoryId),
+                new SqlParameter("@PId",   productId)
+            });
+        }
 
-        public static List<Product> GetRelated(int productId, int categoryId, int count = 4) =>
-            _products.Where(p => p.CategoryId == categoryId && p.Id != productId).Take(count).ToList();
+        // ── Search & Filter (used by ShopController) ──────────
+        public static List<Product> Search(string keyword = null, int? categoryId = null,
+                                           decimal? minPrice = null, decimal? maxPrice = null,
+                                           string sortBy = null)
+        {
+            var where  = "p.IsActive = 1";
+            var parms  = new List<SqlParameter>();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                where += " AND (p.Name LIKE @Kw OR p.ShortDescription LIKE @Kw OR p.Brand LIKE @Kw)";
+                parms.Add(new SqlParameter("@Kw", "%" + keyword.Trim() + "%"));
+            }
+            if (categoryId.HasValue && categoryId > 0)
+            {
+                where += " AND p.CategoryId = @Cat";
+                parms.Add(new SqlParameter("@Cat", categoryId.Value));
+            }
+            if (minPrice.HasValue)
+            {
+                where += " AND p.Price >= @Min";
+                parms.Add(new SqlParameter("@Min", minPrice.Value));
+            }
+            if (maxPrice.HasValue && maxPrice > 0)
+            {
+                where += " AND p.Price <= @Max";
+                parms.Add(new SqlParameter("@Max", maxPrice.Value));
+            }
+
+            string order = "p.Id";
+            switch ((sortBy ?? "").ToLower())
+            {
+                case "price_asc":  order = "p.Price ASC";      break;
+                case "price_desc": order = "p.Price DESC";     break;
+                case "rating":     order = "p.Rating DESC";    break;
+                case "newest":     order = "p.Id DESC";        break;
+                default:           order = "p.IsFeatured DESC, p.Rating DESC"; break;
+            }
+
+            string sql = $@"
+                SELECT p.*, c.Name AS CategoryName, c.Icon AS CategoryIcon, c.Color AS CategoryColor
+                FROM   Products   p
+                JOIN   Categories c ON c.Id = p.CategoryId
+                WHERE  {where}
+                ORDER BY {order}";
+
+            return QueryProducts(sql, parms.ToArray());
+        }
     }
 }
