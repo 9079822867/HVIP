@@ -35,10 +35,10 @@
 
         <!-- Price -->
         <div class="prod-price-row">
-            <span class="prod-price">@p.Price.ToString("0")</span>
+            <span class="prod-price">&#8377;@p.Price.ToString("0")</span>
             @if (p.IsOnSale)
             {
-                <span class="prod-orig">@p.OriginalPrice.Value.ToString("0")</span>
+                <span class="prod-orig">&#8377;@p.OriginalPrice.Value.ToString("0")</span>
                 <span class="prod-disc">@discount% OFF</span>
             }
         </div>
