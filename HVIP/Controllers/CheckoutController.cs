@@ -44,6 +44,12 @@ namespace HVIP.Controllers
                 Status = "Confirmed"
             };
 
+            // Save order to database (userId = null for guest checkout)
+            int? userId = AuthHelper.IsLoggedIn(Session)
+                          ? (int?)AuthHelper.GetUserId(Session)
+                          : null;
+            OrderRepository.SaveOrder(order, userId);
+
             TempData["Order"] = JsonConvert.SerializeObject(order);
             CartHelper.ClearCart(Session);
             return RedirectToAction("Success");

@@ -131,6 +131,8 @@
     </Compile>
     <Compile Include="Helpers\AuthHelper.cs" />
     <Compile Include="Helpers\CartHelper.cs" />
+    <Compile Include="Helpers\DbHelper.cs" />
+    <Compile Include="Helpers\OrderRepository.cs" />
     <Compile Include="Helpers\ProductCatalog.cs" />
     <Compile Include="Helpers\UserRepository.cs" />
     <Compile Include="Models\Cart.cs" />
@@ -209,6 +211,7 @@
     <Content Include="Content\hvip-theme.css" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\HVIPDB_Setup.sql" />
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>

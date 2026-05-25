@@ -30,6 +30,9 @@ namespace HVIP.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Save contact message to database
+                OrderRepository.SaveContactMessage(msg);
+
                 ViewBag.Success = true;
                 ModelState.Clear();
                 return View(new ContactMessage());
