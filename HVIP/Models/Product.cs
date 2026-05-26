@@ -33,7 +33,7 @@ namespace HVIP.Models
                 return 0;
             }
         }
-
+        public bool IsActive { get; set; }
         public bool IsOnSale => DiscountPercent > 0;
     }
 }

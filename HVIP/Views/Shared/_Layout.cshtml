@@ -11,305 +11,309 @@
 </head>
 <body>
 
-<!-- TOP BAR -->
-<div class="top-bar">
-    <div class="container">
-        <div class="d-flex align-items-center">
-            <div class="d-none d-md-flex align-items-center" style="gap:16px;">
-                <span><i class="fas fa-phone-alt me-1"></i> 1800-123-4567</span>
-                <span><i class="fas fa-envelope me-1"></i> info@hvip.com</span>
-            </div>
-            <div class="marquee-wrap flex-grow-1 text-center d-none d-lg-block">
-                <span class="marquee-text">
-                    🚚 Free Delivery on orders above &#8377;500 &nbsp;|&nbsp; ✅ 100% Authentic Products &nbsp;|&nbsp;
-                    🌿 Trusted Homeopathic Medicines &nbsp;|&nbsp; ⭐ 10 Lakh+ Happy Customers &nbsp;|&nbsp;
-                    💊 30+ Products Available &nbsp;|&nbsp; 🔒 Secure & Safe Shopping
-                </span>
-            </div>
-            <div class="ms-auto d-flex" style="gap:10px;">
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-youtube"></i></a>
-                <a href="#"><i class="fab fa-whatsapp"></i></a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- MAIN HEADER -->
-<header class="main-header">
-    <div class="container d-flex align-items-center">
-        <!-- Logo -->
-        <a href="@Url.Action("Index","Home")" class="header-logo">
-            <div class="logo-icon"><i class="fas fa-leaf"></i></div>
-            <div>
-                <span class="logo-main">HVIP</span>
-                <span class="logo-sub">HOMEOPATHIC</span>
-            </div>
-        </a>
-
-        <!-- Search -->
-        <div class="header-search">
-            <form action="@Url.Action("Index","Shop")" method="get" class="search-form">
-                <input type="text" name="q" placeholder="Search medicines, ailments..." value="@(ViewBag.SearchQuery ?? "")" />
-                <button type="submit"><i class="fas fa-search"></i></button>
-            </form>
-        </div>
-
-        <!-- Icons -->
-        <div class="header-right">
-            <a href="@Url.Action("Index","Cart")" class="header-icon">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="cart-badge" id="cartCount">@(ViewBag.CartCount ?? 0)</span>
-                <span>Cart</span>
-            </a>
-
-            @if (ViewBag.IsLoggedIn == true)
-            {
-                <!-- User dropdown (logged in) -->
-                <div class="user-dropdown-wrap d-none d-md-flex">
-                    <button class="user-dropdown-btn" id="userDropBtn" onclick="toggleUserDrop()">
-                        <div class="user-avatar-sm">@(((string)ViewBag.CurrentUserName ?? "U").Substring(0,1).ToUpper())</div>
-                        <span class="user-name-label">@ViewBag.CurrentUserName</span>
-                        <i class="fas fa-chevron-down" style="font-size:10px;margin-left:4px;"></i>
-                    </button>
-                    <div class="user-dropdown-menu" id="userDropMenu">
-                        <a href="@Url.Action("Profile","Account")">
-                            <i class="fas fa-user-circle me-2"></i>My Profile
-                        </a>
-                        <a href="@Url.Action("Index","Cart")">
-                            <i class="fas fa-shopping-bag me-2"></i>My Cart
-                        </a>
-                        @if (ViewBag.IsAdmin == true)
-                        {
-                            <div class="user-drop-divider"></div>
-                            <a href="@Url.Action("Index","Admin")" style="color:var(--primary);font-weight:700;">
-                                <i class="fas fa-cog me-2"></i>Admin Panel
-                            </a>
-                        }
-                        <div class="user-drop-divider"></div>
-                        @using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "m-0" }))
-                        {
-                            @Html.AntiForgeryToken()
-                            <button type="submit" class="user-drop-logout">
-                                <i class="fas fa-sign-out-alt me-2"></i>Sign Out
-                            </button>
-                        }
-                    </div>
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="d-flex align-items-center">
+                <div class="d-none d-md-flex align-items-center" style="gap:16px;">
+                    <span><i class="fas fa-phone-alt me-1"></i> 1800-123-4567</span>
+                    <span><i class="fas fa-envelope me-1"></i> info@hvip.com</span>
                 </div>
-            }
-            else
-            {
-                <a href="@Url.Action("Login","Account")" class="header-icon d-none d-md-flex">
-                    <i class="fas fa-user-circle"></i>
-                    <span>Login</span>
-                </a>
-            }
-        </div>
-    </div>
-</header>
-
-<!-- MAIN NAV -->
-<nav class="main-nav" id="mainNav">
-    <div class="container d-flex align-items-center">
-        <ul class="nav-list flex-grow-1">
-            <li><a href="@Url.Action("Index","Home")"><i class="fas fa-home me-1"></i>Home</a></li>
-            <li class="has-dropdown">
-                <a href="@Url.Action("Index","Shop")">
-                    <i class="fas fa-pills me-1"></i>All Products <i class="fas fa-chevron-down ms-1" style="font-size:11px;"></i>
-                </a>
-                <div class="nav-dropdown">
-                    @if (ViewBag.Categories != null)
-                    {
-                        foreach (var cat in ViewBag.Categories as List<HVIP.Models.Category>)
-                        {
-                            <a href="@Url.Action("Index","Shop", new { categoryId = cat.Id })">
-                                <i class="@cat.Icon" style="color:@cat.Color"></i> @cat.Name
-                            </a>
-                        }
-                    }
+                <div class="marquee-wrap flex-grow-1 text-center d-none d-lg-block">
+                    <span class="marquee-text">
+                        🚚 Free Delivery on orders above &#8377;500 &nbsp;|&nbsp; ✅ 100% Authentic Products &nbsp;|&nbsp;
+                        🌿 Trusted Homeopathic Medicines &nbsp;|&nbsp; ⭐ 10 Lakh+ Happy Customers &nbsp;|&nbsp;
+                        💊 30+ Products Available &nbsp;|&nbsp; 🔒 Secure & Safe Shopping
+                    </span>
                 </div>
-            </li>
-            @if (ViewBag.Categories != null)
-            {
-                foreach (var cat in ViewBag.Categories as List<HVIP.Models.Category>)
-                {
-                    if (!cat.HomeNavbar) continue;
-                    <li><a href="@Url.Action("Index","Shop",new{categoryId=cat.Id})">@cat.Name</a></li>
-                }
-            }
-            <li><a href="@Url.Action("About","Home")">About Us</a></li>
-            <li><a href="@Url.Action("Contact","Home")">Contact</a></li>
-            @if (ViewBag.IsLoggedIn == true)
-            {
-                <li class="d-md-none"><a href="@Url.Action("Profile","Account")"><i class="fas fa-user-circle me-1"></i>@ViewBag.CurrentUserName</a></li>
-            }
-            else
-            {
-                <li class="d-md-none"><a href="@Url.Action("Login","Account")"><i class="fas fa-sign-in-alt me-1"></i>Login</a></li>
-                <li class="d-md-none"><a href="@Url.Action("Register","Account")"><i class="fas fa-user-plus me-1"></i>Register</a></li>
-            }
-        </ul>
-        <button class="mobile-toggle" onclick="document.getElementById('mainNav').classList.toggle('open')">
-            <i class="fas fa-bars"></i>
-        </button>
-    </div>
-</nav>
-
-<!-- PAGE CONTENT -->
-<main>
-    @if (TempData["Welcome"] != null)
-    {
-        <div id="welcomeToast" class="welcome-toast show">
-            <i class="fas fa-leaf me-2" style="color:var(--primary);"></i>
-            @TempData["Welcome"]
-            <button onclick="document.getElementById('welcomeToast').remove()" style="background:none;border:none;cursor:pointer;margin-left:8px;font-size:14px;color:#555;">✕</button>
-        </div>
-    }
-    @if (TempData["LogoutMsg"] != null)
-    {
-        <div id="logoutToast" class="welcome-toast show" style="border-left-color:#888;">
-            <i class="fas fa-sign-out-alt me-2" style="color:#555;"></i>
-            @TempData["LogoutMsg"]
-            <button onclick="document.getElementById('logoutToast').remove()" style="background:none;border:none;cursor:pointer;margin-left:8px;font-size:14px;color:#555;">✕</button>
-        </div>
-    }
-    @RenderBody()
-</main>
-
-<!-- NEWSLETTER -->
-<section class="newsletter-section">
-    <div class="container">
-        <div class="row align-items-center gy-3">
-            <div class="col-lg-6">
-                <h3><i class="fas fa-envelope-open-text me-2"></i>Subscribe to Our Newsletter</h3>
-                <p>Get health tips, exclusive offers and product updates straight to your inbox.</p>
-            </div>
-            <div class="col-lg-6 d-flex justify-content-lg-end">
-                <form class="newsletter-form" onsubmit="return false;">
-                    <input type="email" placeholder="Enter your email address..." required />
-                    <button type="submit">SUBSCRIBE</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="main-footer">
-    <div class="container">
-        <div class="row gy-4">
-            <div class="col-lg-3 col-md-6">
-                <h5 class="footer-heading">HVIP Homeopathic</h5>
-                <p style="font-size:13.5px;color:rgba(255,255,255,.7);">
-                    India's trusted homeopathic medicine brand. Quality remedies for natural healing since 1984.
-                    GMP certified and ISO 9001:2015 compliant.
-                </p>
-                <div class="footer-social">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                <div class="ms-auto d-flex" style="gap:10px;">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
                     <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
                     <a href="#"><i class="fab fa-youtube"></i></a>
                     <a href="#"><i class="fab fa-whatsapp"></i></a>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-6">
-                <h5 class="footer-heading">Quick Links</h5>
-                <ul class="footer-links">
-                    <li><a href="@Url.Action("Index","Home")"><i class="fas fa-chevron-right me-1" style="font-size:10px;"></i>Home</a></li>
-                    <li><a href="@Url.Action("Index","Shop")"><i class="fas fa-chevron-right me-1" style="font-size:10px;"></i>Shop</a></li>
-                    <li><a href="@Url.Action("About","Home")"><i class="fas fa-chevron-right me-1" style="font-size:10px;"></i>About Us</a></li>
-                    <li><a href="@Url.Action("Contact","Home")"><i class="fas fa-chevron-right me-1" style="font-size:10px;"></i>Contact</a></li>
-                    <li><a href="#"><i class="fas fa-chevron-right me-1" style="font-size:10px;"></i>Track Order</a></li>
-                    <li><a href="#"><i class="fas fa-chevron-right me-1" style="font-size:10px;"></i>Return Policy</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <h5 class="footer-heading">Product Categories</h5>
-                <ul class="footer-links">
-                    @if (ViewBag.Categories != null)
-                    {
-                        foreach (var cat in ViewBag.Categories as List<HVIP.Models.Category>)
-                        {
-                            if (!cat.FooterNavbar) continue;
-                            <li>
-                                <a href="@Url.Action("Index","Shop",new{categoryId=cat.Id})">
-                                    <i class="@cat.Icon me-1" style="color:#4caf50;font-size:11px;"></i>@cat.Name
-                                </a>
-                            </li>
-                        }
-                    }
-                </ul>
-            </div>
-            <div class="col-lg-4 col-md-6">
-                <h5 class="footer-heading">Contact Us</h5>
-                <ul class="footer-contact">
-                    <li><i class="fas fa-map-marker-alt"></i>15, Industrial Area Phase II, New Delhi - 110020, India</li>
-                    <li><i class="fas fa-phone-alt"></i>1800-123-4567 (Toll Free, Mon–Sat 9am–6pm)</li>
-                    <li><i class="fas fa-envelope"></i>info@hvip.com</li>
-                    <li><i class="fas fa-globe"></i>www.hviphomeopathic.com</li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; @DateTime.Now.Year HVIP Homeopathic Pvt. Ltd. All Rights Reserved.</p>
-            <p>Made with <i class="fas fa-heart" style="color:#e53935;"></i> for Natural Healing</p>
         </div>
     </div>
-</footer>
 
-<!-- CART TOAST -->
-<div class="cart-toast" id="cartToast"><i class="fas fa-check-circle me-2"></i>Added to Cart!</div>
+    <!-- MAIN HEADER -->
+    <header class="main-header">
+        <div class="container d-flex align-items-center">
+            <!-- Logo -->
+            <a href="@Url.Action("Index","Home")" class="header-logo">
+                <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+                <div>
+                    <span class="logo-main">HVIP</span>
+                    <span class="logo-sub">HOMEOPATHIC</span>
+                </div>
+            </a>
 
-@Scripts.Render("~/bundles/jquery")
-@Scripts.Render("~/bundles/bootstrap")
+            <!-- Search -->
+            <div class="header-search">
+                <form action="@Url.Action("Index","Shop")" method="get" class="search-form">
+                    <input type="text" name="q" placeholder="Search medicines, ailments..." value="@(ViewBag.SearchQuery ?? "")" />
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
 
-<script>
-    // Cart AJAX
-    function addToCart(productId, qty) {
-        qty = qty || 1;
-        $.post('/Cart/Add/' + productId, { qty: qty }, function (res) {
-            if (res && res.success) {
-                $('#cartCount').text(res.count);
-                var t = $('#cartToast');
-                t.addClass('show');
-                setTimeout(function () { t.removeClass('show'); }, 2200);
-            }
-        }).fail(function () {
-            window.location.href = '/Cart/Add/' + productId;
-        });
-    }
+            <!-- Icons -->
+            <div class="header-right">
+                <a href="@Url.Action("Index","Cart")" class="header-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="cartCount">@(ViewBag.CartCount ?? 0)</span>
+                    <span>Cart</span>
+                </a>
 
-    // Qty selector
-    function changeQty(delta) {
-        var el = document.getElementById('qtyInput');
-        if (el) { var v = Math.max(1, parseInt(el.value) + delta); el.value = v; }
-    }
+                @if (ViewBag.IsLoggedIn == true)
+                {
+                    <!-- User dropdown (logged in) -->
+                    <div class="user-dropdown-wrap d-none d-md-flex">
+                        <button class="user-dropdown-btn" id="userDropBtn" onclick="toggleUserDrop()">
+                            <div class="user-avatar-sm">@(((string)ViewBag.CurrentUserName ?? "U").Substring(0,1).ToUpper())</div>
+                            <span class="user-name-label">@ViewBag.CurrentUserName</span>
+                            <i class="fas fa-chevron-down" style="font-size:10px;margin-left:4px;"></i>
+                        </button>
+                        <div class="user-dropdown-menu" id="userDropMenu">
+                            <a href="@Url.Action("Profile","Account")">
+                                <i class="fas fa-user-circle me-2"></i>My Profile
+                            </a>
+                            <a href="@Url.Action("Index","Cart")">
+                                <i class="fas fa-shopping-bag me-2"></i>My Cart
+                            </a>
+                            @if (ViewBag.IsAdmin == true)
+                            {
+                                <div class="user-drop-divider"></div>
+                                <a href="@Url.Action("Index","Admin")" style="color:var(--primary);font-weight:700;">
+                                    <i class="fas fa-cog me-2"></i>Admin Panel
+                                </a>
+                            }
+                            <div class="user-drop-divider"></div>
+                            @using (Html.BeginForm("Logout", "Account", FormMethod.Post, new { id = "logoutForm", @class = "m-0" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="user-drop-logout">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Sign Out
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <a href="@Url.Action("Login","Account")" class="header-icon d-none d-md-flex">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Login</span>
+                    </a>
+                }
+            </div>
+        </div>
+    </header>
 
-    // User dropdown
-    function toggleUserDrop() {
-        var menu = document.getElementById('userDropMenu');
-        if (menu) menu.classList.toggle('open');
-    }
-    document.addEventListener('click', function (e) {
-        var wrap = document.querySelector('.user-dropdown-wrap');
-        if (wrap && !wrap.contains(e.target)) {
-            var menu = document.getElementById('userDropMenu');
-            if (menu) menu.classList.remove('open');
+    <!-- MAIN NAV -->
+    <nav class="main-nav" id="mainNav">
+        <div class="container d-flex align-items-center">
+            <ul class="nav-list flex-grow-1">
+                <li><a href="@Url.Action("Index","Home")"><i class="fas fa-home me-1"></i>Home</a></li>
+                <li class="has-dropdown">
+                    <a href="@Url.Action("Index","Shop")">
+                        <i class="fas fa-pills me-1"></i>All Products <i class="fas fa-chevron-down ms-1" style="font-size:11px;"></i>
+                    </a>
+                    <div class="nav-dropdown">
+                        @if (ViewBag.Categories != null)
+                        {
+                            foreach (var cat in ViewBag.Categories as List<HVIP.Models.Category>)
+                            {
+                                <a href="@Url.Action("Index","Shop", new { categoryId = cat.Id })">
+                                    <i class="@cat.Icon" style="color:@cat.Color"></i> @cat.Name
+                                </a>
+                            }
+                        }
+                    </div>
+                </li>
+                @if (ViewBag.Categories != null)
+                {
+                    foreach (var cat in ViewBag.Categories as List<HVIP.Models.Category>)
+                    {
+                        if (cat.HomeNavbar)
+                        {
+                            <li><a href="@Url.Action("Index", "Shop", new { categoryId = cat.Id })">@cat.Name</a></li>
+                        }
+                    }
+                }
+                <li><a href="@Url.Action("About","Home")">About Us</a></li>
+                <li><a href="@Url.Action("Contact","Home")">Contact</a></li>
+                @if (ViewBag.IsLoggedIn == true)
+                {
+                    <li class="d-md-none"><a href="@Url.Action("Profile","Account")"><i class="fas fa-user-circle me-1"></i>@ViewBag.CurrentUserName</a></li>
+                }
+                else
+                {
+                    <li class="d-md-none"><a href="@Url.Action("Login","Account")"><i class="fas fa-sign-in-alt me-1"></i>Login</a></li>
+                    <li class="d-md-none"><a href="@Url.Action("Register","Account")"><i class="fas fa-user-plus me-1"></i>Register</a></li>
+                }
+            </ul>
+            <button class="mobile-toggle" onclick="document.getElementById('mainNav').classList.toggle('open')">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- PAGE CONTENT -->
+    <main>
+        @if (TempData["Welcome"] != null)
+        {
+            <div id="welcomeToast" class="welcome-toast show">
+                <i class="fas fa-leaf me-2" style="color:var(--primary);"></i>
+                @TempData["Welcome"]
+                <button onclick="document.getElementById('welcomeToast').remove()" style="background:none;border:none;cursor:pointer;margin-left:8px;font-size:14px;color:#555;">✕</button>
+            </div>
         }
-    });
+        @if (TempData["LogoutMsg"] != null)
+        {
+            <div id="logoutToast" class="welcome-toast show" style="border-left-color:#888;">
+                <i class="fas fa-sign-out-alt me-2" style="color:#555;"></i>
+                @TempData["LogoutMsg"]
+                <button onclick="document.getElementById('logoutToast').remove()" style="background:none;border:none;cursor:pointer;margin-left:8px;font-size:14px;color:#555;">✕</button>
+            </div>
+        }
+        @RenderBody()
+    </main>
 
-    // Auto-hide welcome / logout toasts
-    setTimeout(function () {
-        var t = document.getElementById('welcomeToast');
-        if (t) t.style.opacity = '0';
-    }, 4000);
-    setTimeout(function () {
-        var t = document.getElementById('logoutToast');
-        if (t) t.style.opacity = '0';
-    }, 3500);
-</script>
+    <!-- NEWSLETTER -->
+    <section class="newsletter-section">
+        <div class="container">
+            <div class="row align-items-center gy-3">
+                <div class="col-lg-6">
+                    <h3><i class="fas fa-envelope-open-text me-2"></i>Subscribe to Our Newsletter</h3>
+                    <p>Get health tips, exclusive offers and product updates straight to your inbox.</p>
+                </div>
+                <div class="col-lg-6 d-flex justify-content-lg-end">
+                    <form class="newsletter-form" onsubmit="return false;">
+                        <input type="email" placeholder="Enter your email address..." required />
+                        <button type="submit">SUBSCRIBE</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
 
-@RenderSection("scripts", required: false)
+    <!-- FOOTER -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="row gy-4">
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="footer-heading">HVIP Homeopathic</h5>
+                    <p style="font-size:13.5px;color:rgba(255,255,255,.7);">
+                        India's trusted homeopathic medicine brand. Quality remedies for natural healing since 1984.
+                        GMP certified and ISO 9001:2015 compliant.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <h5 class="footer-heading">Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="@Url.Action("Index","Home")"><i class="fas fa-chevron-right me-1" style="font-size:10px;"></i>Home</a></li>
+                        <li><a href="@Url.Action("Index","Shop")"><i class="fas fa-chevron-right me-1" style="font-size:10px;"></i>Shop</a></li>
+                        <li><a href="@Url.Action("About","Home")"><i class="fas fa-chevron-right me-1" style="font-size:10px;"></i>About Us</a></li>
+                        <li><a href="@Url.Action("Contact","Home")"><i class="fas fa-chevron-right me-1" style="font-size:10px;"></i>Contact</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right me-1" style="font-size:10px;"></i>Track Order</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right me-1" style="font-size:10px;"></i>Return Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="footer-heading">Product Categories</h5>
+                    <ul class="footer-links">
+                        @if (ViewBag.Categories != null)
+                        {
+                            foreach (var cat in ViewBag.Categories as List<HVIP.Models.Category>)
+                            {
+                                if (cat.FooterNavbar)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Index", "Shop", new { categoryId = cat.Id })">
+                                            <i class="@cat.Icon me-1" style="color:#4caf50;font-size:11px;"></i>@cat.Name
+                                        </a>
+                                    </li>
+                                }
+                            }
+                        }
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="footer-heading">Contact Us</h5>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-map-marker-alt"></i>15, Industrial Area Phase II, New Delhi - 110020, India</li>
+                        <li><i class="fas fa-phone-alt"></i>1800-123-4567 (Toll Free, Mon–Sat 9am–6pm)</li>
+                        <li><i class="fas fa-envelope"></i>info@hvip.com</li>
+                        <li><i class="fas fa-globe"></i>www.hviphomeopathic.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; @DateTime.Now.Year HVIP Homeopathic Pvt. Ltd. All Rights Reserved.</p>
+                <p>Made with <i class="fas fa-heart" style="color:#e53935;"></i> for Natural Healing</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CART TOAST -->
+    <div class="cart-toast" id="cartToast"><i class="fas fa-check-circle me-2"></i>Added to Cart!</div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+    <script>
+        // Cart AJAX
+        function addToCart(productId, qty) {
+            qty = qty || 1;
+            $.post('/Cart/Add/' + productId, { qty: qty }, function (res) {
+                if (res && res.success) {
+                    $('#cartCount').text(res.count);
+                    var t = $('#cartToast');
+                    t.addClass('show');
+                    setTimeout(function () { t.removeClass('show'); }, 2200);
+                }
+            }).fail(function () {
+                window.location.href = '/Cart/Add/' + productId;
+            });
+        }
+
+        // Qty selector
+        function changeQty(delta) {
+            var el = document.getElementById('qtyInput');
+            if (el) { var v = Math.max(1, parseInt(el.value) + delta); el.value = v; }
+        }
+
+        // User dropdown
+        function toggleUserDrop() {
+            var menu = document.getElementById('userDropMenu');
+            if (menu) menu.classList.toggle('open');
+        }
+        document.addEventListener('click', function (e) {
+            var wrap = document.querySelector('.user-dropdown-wrap');
+            if (wrap && !wrap.contains(e.target)) {
+                var menu = document.getElementById('userDropMenu');
+                if (menu) menu.classList.remove('open');
+            }
+        });
+
+        // Auto-hide welcome / logout toasts
+        setTimeout(function () {
+            var t = document.getElementById('welcomeToast');
+            if (t) t.style.opacity = '0';
+        }, 4000);
+        setTimeout(function () {
+            var t = document.getElementById('logoutToast');
+            if (t) t.style.opacity = '0';
+        }, 3500);
+    </script>
+
+    @RenderSection("scripts", required: false)
 </body>
 </html>
