@@ -228,10 +228,12 @@
     <Content Include="Views\Admin\Orders.cshtml" />
     <Content Include="Views\Admin\Messages.cshtml" />
     <Content Include="Content\hvip-theme.css" />
+    <Content Include="Views\Admin\ShippingSettings.cshtml" />
+    <Content Include="Views\Admin\UserDetail.cshtml" />
+    <Content Include="Views\Admin\Users.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\HVIPDB_Setup.sql" />
-    <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
