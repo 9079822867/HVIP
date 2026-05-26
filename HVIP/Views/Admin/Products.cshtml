@@ -32,8 +32,22 @@
                     <tr>
                         <td class="text-muted" style="font-size:12px;">@p.Id</td>
                         <td>
-                            <div style="font-weight:600;max-width:180px;">@p.Name</div>
-                            <small class="text-muted">@p.Size &bull; @p.Brand</small>
+                            <div class="d-flex align-items-center gap-2">
+                                @if (!string.IsNullOrEmpty(p.ImageUrl))
+                                {
+                                    <img src="@p.ImageUrl" alt="" style="width:44px;height:44px;object-fit:cover;border-radius:6px;border:1px solid #eee;flex-shrink:0;" />
+                                }
+                                else
+                                {
+                                    <div style="width:44px;height:44px;border-radius:6px;background:linear-gradient(135deg,@p.CategoryColor,@(p.CategoryColor)99);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                        <i class="@p.CategoryIcon" style="color:#fff;font-size:18px;"></i>
+                                    </div>
+                                }
+                                <div>
+                                    <div style="font-weight:600;max-width:160px;">@p.Name</div>
+                                    <small class="text-muted">@p.Size &bull; @p.Brand</small>
+                                </div>
+                            </div>
                         </td>
                         <td>
                             <span style="color:@p.CategoryColor;font-weight:600;font-size:12.5px;">

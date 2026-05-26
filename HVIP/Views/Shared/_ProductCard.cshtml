@@ -11,10 +11,19 @@
         @if (p.IsBestseller) { <span class="badge-pill badge-best">BESTSELLER</span> }
     </div>
 
-    <!-- Icon Area -->
-    <div class="prod-icon-area" style="background:linear-gradient(135deg,@p.CategoryColor 0%,@(p.CategoryColor)cc 100%);">
-        <i class="@p.CategoryIcon"></i>
-    </div>
+    <!-- Image / Icon Area -->
+    @if (!string.IsNullOrEmpty(p.ImageUrl))
+    {
+        <a href="@Url.Action("Details","Shop",new{id=p.Id})" class="prod-img-area d-block">
+            <img src="@p.ImageUrl" alt="@p.Name" loading="lazy" />
+        </a>
+    }
+    else
+    {
+        <div class="prod-icon-area" style="background:linear-gradient(135deg,@p.CategoryColor 0%,@(p.CategoryColor)cc 100%);">
+            <i class="@p.CategoryIcon"></i>
+        </div>
+    }
 
     <!-- Body -->
     <div class="prod-body">

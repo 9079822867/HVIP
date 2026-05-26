@@ -88,6 +88,11 @@ namespace HVIP.Helpers
             }
         }
 
+        public static void UpdateProductImage(int productId, string imageUrl)
+            => DbHelper.Execute("UPDATE Products SET ImageUrl=@Img WHERE Id=@Id",
+                                new[] { new SqlParameter("@Img", (object)imageUrl ?? DBNull.Value),
+                                        new SqlParameter("@Id",  productId) });
+
         public static bool DeleteProduct(int id)
             => DbHelper.Execute("DELETE FROM Products WHERE Id=@Id",
                                 new[] { new SqlParameter("@Id", id) }) > 0;

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web;
 using System.Web.Mvc;
 
 namespace HVIP.Models
@@ -26,6 +27,11 @@ namespace HVIP.Models
         public bool    IsActive        { get; set; } = true;
         public double  Rating          { get; set; } = 4.0;
         public int     ReviewCount     { get; set; }
+
+        // Image
+        public string          ImageUrl  { get; set; }   // current saved URL (shown in edit)
+        public HttpPostedFileBase ImageFile { get; set; } // new upload
+        public bool            RemoveImage { get; set; } // tick to clear existing image
 
         public List<SelectListItem> CategoryOptions { get; set; }
         public bool IsEdit => Id > 0;

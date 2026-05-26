@@ -124,6 +124,9 @@ img{ max-width: 100%; }
 .badge-best { background: var(--accent); color: #fff; }
 .prod-icon-area { height: 175px; display: flex; align-items: center; justify-content: center; font-size: 70px; color: rgba(255,255,255,.8); position: relative; overflow: hidden; }
 .prod-icon-area::after { content:''; position: absolute; inset: 0; background: linear-gradient(to bottom,transparent 60%,rgba(0,0,0,.15)); }
+.prod-img-area { height: 175px; position: relative; overflow: hidden; }
+.prod-img-area img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
+.product-card:hover .prod-img-area img { transform: scale(1.06); }
 .prod-body { padding: 14px; flex: 1; display: flex; flex-direction: column; }
 .prod-category { font-size: 11px; color: var(--primary); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px; }
 .prod-name { font-size: 15px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; line-height: 1.3; }
@@ -211,6 +214,8 @@ img{ max-width: 100%; }
 /* ── PRODUCT DETAIL ──────────────────────────────────────────────── */
 .detail-icon-area { height: 360px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 130px; color: rgba(255,255,255,.8); position: relative; overflow: hidden; }
 .detail-icon-area::after { content:''; position: absolute; inset: 0; background: linear-gradient(to bottom,transparent 50%,rgba(0,0,0,.2)); }
+.detail-img-area { height: 360px; border-radius: var(--radius); overflow: hidden; position: relative; }
+.detail-img-area img { width: 100%; height: 100%; object-fit: cover; }
 .detail-cat-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--primary-xlight); color: var(--primary); padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 10px; }
 .detail-title { font-size: 26px; font-weight: 800; color: var(--text-dark); margin-bottom: 12px; line-height: 1.2; }
 .detail-price-block { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 14px 16px; background: var(--primary-xlight); border-radius: var(--radius); margin: 14px 0; }

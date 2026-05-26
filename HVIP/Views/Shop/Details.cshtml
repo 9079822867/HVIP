@@ -27,9 +27,18 @@
 
             <!-- Product Image / Icon -->
             <div class="col-lg-5">
-                <div class="detail-icon-area" style="background:linear-gradient(135deg,@Model.CategoryColor 0%,@(Model.CategoryColor)bb 100%);">
-                    <i class="@Model.CategoryIcon"></i>
-                </div>
+                @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                {
+                    <div class="detail-img-area">
+                        <img src="@Model.ImageUrl" alt="@Model.Name" />
+                    </div>
+                }
+                else
+                {
+                    <div class="detail-icon-area" style="background:linear-gradient(135deg,@Model.CategoryColor 0%,@(Model.CategoryColor)bb 100%);">
+                        <i class="@Model.CategoryIcon"></i>
+                    </div>
+                }
                 <!-- Badges -->
                 <div class="d-flex gap-2 flex-wrap mt-2">
                     @if (Model.IsOnSale) { <span class="badge-pill badge-sale">-@discount% OFF</span> }

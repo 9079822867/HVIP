@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using HVIP.Helpers;
@@ -49,7 +50,12 @@ namespace HVIP.Controllers
         public ActionResult ProductAdd(ProductFormViewModel f)
         {
             if (!ModelState.IsValid) return View("ProductForm", BuildProductForm(f));
-            AdminRepository.SaveProduct(f);
+            int newId = AdminRepository.SaveProduct(f);
+            if (f.ImageFile != null && f.ImageFile.ContentLength > 0)
+            {
+                string imgUrl = SaveProductImage(f.ImageFile, newId);
+                if (imgUrl != null) AdminRepository.UpdateProductImage(newId, imgUrl);
+            }
             TempData["AdminMsg"] = "Product added successfully!";
             return RedirectToAction("Products");
         }
@@ -66,7 +72,8 @@ namespace HVIP.Controllers
                 Description = p.Description, Price = p.Price, OriginalPrice = p.OriginalPrice,
                 CategoryId = p.CategoryId, Brand = p.Brand, Stock = p.Stock, Size = p.Size,
                 IsFeatured = p.IsFeatured, IsBestseller = p.IsBestseller, IsNew = p.IsNew,
-                IsActive = p.IsActive, Rating = p.Rating, ReviewCount = p.ReviewCount
+                IsActive = p.IsActive, Rating = p.Rating, ReviewCount = p.ReviewCount,
+                ImageUrl = p.ImageUrl
             };
             return View("ProductForm", BuildProductForm(f));
         }
@@ -76,6 +83,17 @@ namespace HVIP.Controllers
         {
             if (!ModelState.IsValid) return View("ProductForm", BuildProductForm(f));
             AdminRepository.SaveProduct(f);
+            if (f.RemoveImage)
+            {
+                DeleteProductImageFile(f.Id);
+                AdminRepository.UpdateProductImage(f.Id, null);
+            }
+            else if (f.ImageFile != null && f.ImageFile.ContentLength > 0)
+            {
+                DeleteProductImageFile(f.Id);   // remove old file first
+                string imgUrl = SaveProductImage(f.ImageFile, f.Id);
+                if (imgUrl != null) AdminRepository.UpdateProductImage(f.Id, imgUrl);
+            }
             TempData["AdminMsg"] = "Product updated successfully!";
             return RedirectToAction("Products");
         }
@@ -93,6 +111,40 @@ namespace HVIP.Controllers
         {
             bool ok = AdminRepository.ToggleProduct(id, field);
             return Json(new { success = ok });
+        }
+
+        // ── Image helpers ─────────────────────────────────────
+        private static readonly HashSet<string> AllowedExts =
+            new HashSet<string> { ".jpg", ".jpeg", ".png", ".gif", ".webp" };
+
+        private string SaveProductImage(System.Web.HttpPostedFileBase file, int productId)
+        {
+            try
+            {
+                string ext = Path.GetExtension(file.FileName).ToLower();
+                if (!AllowedExts.Contains(ext) || file.ContentLength > 5 * 1024 * 1024)
+                    return null;
+                string folder = Server.MapPath("~/Content/ProductImages/");
+                if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+                string fileName = $"product_{productId}{ext}";
+                file.SaveAs(Path.Combine(folder, fileName));
+                return $"/Content/ProductImages/{fileName}";
+            }
+            catch { return null; }
+        }
+
+        private void DeleteProductImageFile(int productId)
+        {
+            try
+            {
+                string folder = Server.MapPath("~/Content/ProductImages/");
+                foreach (var ext in AllowedExts)
+                {
+                    string file = Path.Combine(folder, $"product_{productId}{ext}");
+                    if (System.IO.File.Exists(file)) System.IO.File.Delete(file);
+                }
+            }
+            catch { }
         }
 
         private ProductFormViewModel BuildProductForm(ProductFormViewModel f)
