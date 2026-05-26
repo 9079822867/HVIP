@@ -1,31 +1,63 @@
 @model List<HVIP.Models.Category>
-@{ Layout = "~/Views/Admin/_AdminLayout.cshtml"; ViewBag.Title = "Categories"; ViewBag.AdminPage = "categories"; }
+@{ Layout = "~/Views/Admin/_AdminLayout.cshtml"; ViewBag.AdminPage = "categories";
+   int curPage    = (int)(ViewBag.Page    ?? 1);
+   int totalPages = (int)(ViewBag.TotalPages ?? 1);
+   int totalCount = (int)(ViewBag.TotalCount ?? Model.Count);
+}
 
 <div class="admin-card">
     <div class="admin-card-header d-flex justify-content-between align-items-center">
-        <span><i class="fas fa-th-large me-2"></i>Categories (@Model.Count)</span>
+        <span><i class="fas fa-th-large me-2"></i>Categories &nbsp;<span class="badge bg-secondary">@totalCount total</span></span>
         <a href="@Url.Action("CategoryAdd","Admin")" class="admin-btn-primary"><i class="fas fa-plus me-1"></i>Add Category</a>
     </div>
     <div class="table-responsive">
         <table class="admin-table">
-            <thead><tr><th>ID</th><th>Icon</th><th>Name</th><th>Slug</th><th>Color</th><th>Description</th><th>Actions</th></tr></thead>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Icon</th>
+                    <th>Name / Slug</th>
+                    <th>Color</th>
+                    <th style="text-align:center;">Sort</th>
+                    <th style="text-align:center;">Active</th>
+                    <th style="text-align:center;">Top Nav</th>
+                    <th style="text-align:center;">Footer</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
             <tbody>
                 @foreach (var c in Model)
                 {
                     <tr>
-                        <td class="text-muted">@c.Id</td>
+                        <td class="text-muted" style="font-size:12px;">@c.Id</td>
                         <td><i class="@c.Icon" style="font-size:20px;color:@c.Color;"></i></td>
-                        <td><strong>@c.Name</strong></td>
-                        <td><code>@c.Slug</code></td>
-                        <td><span style="display:inline-block;width:22px;height:22px;border-radius:4px;background:@c.Color;vertical-align:middle;"></span> @c.Color</td>
-                        <td style="max-width:220px;font-size:12.5px;">@c.Description</td>
+                        <td>
+                            <strong>@c.Name</strong><br/>
+                            <code style="font-size:11px;color:#888;">@c.Slug</code>
+                        </td>
+                        <td>
+                            <span style="display:inline-block;width:18px;height:18px;border-radius:3px;background:@c.Color;vertical-align:middle;border:1px solid #ddd;"></span>
+                            <span style="font-size:12px;color:#666;margin-left:4px;">@c.Color</span>
+                        </td>
+                        <td style="text-align:center;">
+                            <span style="font-size:13px;font-weight:600;color:#555;">@c.SortOrder</span>
+                        </td>
+                        <td style="text-align:center;">
+                            <span class="admin-toggle @(c.IsActive?"on":"off")">@(c.IsActive?"Active":"Inactive")</span>
+                        </td>
+                        <td style="text-align:center;">
+                            <span class="admin-toggle @(c.HomeNavbar?"on":"off")">@(c.HomeNavbar?"Yes":"No")</span>
+                        </td>
+                        <td style="text-align:center;">
+                            <span class="admin-toggle @(c.FooterNavbar?"on":"off")">@(c.FooterNavbar?"Yes":"No")</span>
+                        </td>
                         <td>
                             <div class="d-flex gap-1">
-                                <a href="@Url.Action("CategoryEdit","Admin",new{id=c.Id})" class="admin-action-btn edit"><i class="fas fa-edit"></i></a>
+                                <a href="@Url.Action("CategoryEdit","Admin",new{id=c.Id})" class="admin-action-btn edit" title="Edit"><i class="fas fa-edit"></i></a>
                                 @using (Html.BeginForm("CategoryDelete","Admin",new{id=c.Id},FormMethod.Post,new{@class="d-inline",onsubmit="return confirm('Delete category? Products in this category may break.')"}))
                                 {
                                     @Html.AntiForgeryToken()
-                                    <button class="admin-action-btn delete" type="submit"><i class="fas fa-trash"></i></button>
+                                    <button class="admin-action-btn delete" type="submit" title="Delete"><i class="fas fa-trash"></i></button>
                                 }
                             </div>
                         </td>
@@ -34,4 +66,28 @@
             </tbody>
         </table>
     </div>
+
+    @* Pagination *@
+    @if (totalPages > 1)
+    {
+        <div class="d-flex justify-content-between align-items-center px-3 py-2 border-top" style="font-size:13px;">
+            <span class="text-muted">
+                Page @curPage of @totalPages &nbsp;(&nbsp;@totalCount categories&nbsp;)
+            </span>
+            <ul class="pagination pagination-sm mb-0">
+                <li class="page-item @(curPage==1?"disabled":"")">
+                    <a class="page-link" href="@Url.Action("Categories","Admin",new{page=curPage-1})">&laquo;</a>
+                </li>
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i==curPage?"active":"")">
+                        <a class="page-link" href="@Url.Action("Categories","Admin",new{page=i})">@i</a>
+                    </li>
+                }
+                <li class="page-item @(curPage==totalPages?"disabled":"")">
+                    <a class="page-link" href="@Url.Action("Categories","Admin",new{page=curPage+1})">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+    }
 </div>

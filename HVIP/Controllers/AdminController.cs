@@ -26,10 +26,16 @@ namespace HVIP.Controllers
 
         // ══ PRODUCTS ══════════════════════════════════════════
 
-        public ActionResult Products()
+        public ActionResult Products(int page = 1)
         {
-            ViewBag.Title = "Products";
-            return View(ProductCatalog.GetAllAdmin());
+            const int size = 20;
+            int total = ProductCatalog.GetAllAdminCount();
+            ViewBag.Title      = "Products";
+            ViewBag.Page       = page;
+            ViewBag.PageSize   = size;
+            ViewBag.TotalCount = total;
+            ViewBag.TotalPages = (int)System.Math.Ceiling((double)total / size);
+            return View(ProductCatalog.GetAllAdmin(page, size));
         }
 
         [HttpGet]
@@ -99,10 +105,16 @@ namespace HVIP.Controllers
 
         // ══ CATEGORIES ════════════════════════════════════════
 
-        public ActionResult Categories()
+        public ActionResult Categories(int page = 1)
         {
-            ViewBag.Title = "Categories";
-            return View(ProductCatalog.GetCategoriesAdmin());
+            const int size = 15;
+            int total = ProductCatalog.GetCategoriesAdminCount();
+            ViewBag.Title      = "Categories";
+            ViewBag.Page       = page;
+            ViewBag.PageSize   = size;
+            ViewBag.TotalCount = total;
+            ViewBag.TotalPages = (int)System.Math.Ceiling((double)total / size);
+            return View(ProductCatalog.GetCategoriesAdmin(page, size));
         }
 
         [HttpGet]

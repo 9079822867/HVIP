@@ -1,46 +1,74 @@
-﻿@model List<HVIP.Models.Product>
-@{ Layout = "~/Views/Admin/_AdminLayout.cshtml"; ViewBag.Title = "Products"; ViewBag.AdminPage = "products"; }
+@model List<HVIP.Models.Product>
+@{ Layout = "~/Views/Admin/_AdminLayout.cshtml"; ViewBag.AdminPage = "products";
+   int curPage    = (int)(ViewBag.Page    ?? 1);
+   int totalPages = (int)(ViewBag.TotalPages ?? 1);
+   int totalCount = (int)(ViewBag.TotalCount ?? Model.Count);
+}
 
 <div class="admin-card">
     <div class="admin-card-header d-flex justify-content-between align-items-center">
-        <span><i class="fas fa-pills me-2"></i>All Products (@Model.Count)</span>
+        <span><i class="fas fa-pills me-2"></i>All Products &nbsp;<span class="badge bg-secondary">@totalCount total</span></span>
         <a href="@Url.Action("ProductAdd","Admin")" class="admin-btn-primary"><i class="fas fa-plus me-1"></i>Add Product</a>
     </div>
     <div class="table-responsive">
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th>ID</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th>
-                    <th>Featured</th><th>Bestseller</th><th>New</th><th>Actions</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th style="text-align:center;">Featured</th>
+                    <th style="text-align:center;">Bestseller</th>
+                    <th style="text-align:center;">New</th>
+                    <th style="text-align:center;">Active</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var p in Model)
                 {
                     <tr>
-                        <td class="text-muted">@p.Id</td>
+                        <td class="text-muted" style="font-size:12px;">@p.Id</td>
                         <td>
-                            <div style="font-weight:600;">@p.Name</div>
+                            <div style="font-weight:600;max-width:180px;">@p.Name</div>
                             <small class="text-muted">@p.Size &bull; @p.Brand</small>
                         </td>
-                        <td><span style="color:@p.CategoryColor;font-weight:600;"><i class="@p.CategoryIcon me-1"></i>@p.CategoryName</span></td>
+                        <td>
+                            <span style="color:@p.CategoryColor;font-weight:600;font-size:12.5px;">
+                                <i class="@p.CategoryIcon me-1"></i>@p.CategoryName
+                            </span>
+                        </td>
                         <td>
                             <strong>&#8377;@p.Price</strong>
-                            @if (p.OriginalPrice.HasValue){ <br/><small class="text-muted"><s>&#8377;@p.OriginalPrice</s></small> }
+                            @if (p.OriginalPrice.HasValue)
+                            {
+                                <br/><small class="text-muted"><s>&#8377;@p.OriginalPrice</s></small>
+                            }
                         </td>
                         <td>@p.Stock</td>
-                        <td><span class="admin-toggle @(p.IsFeatured?"on":"off")">@(p.IsFeatured?"Yes":"No")</span></td>
-                        <td><span class="admin-toggle @(p.IsBestseller?"on":"off")">@(p.IsBestseller?"Yes":"No")</span></td>
-                        <td><span class="admin-toggle @(p.IsNew?"on":"off")">@(p.IsNew?"Yes":"No")</span></td>
+                        <td style="text-align:center;">
+                            <span class="admin-toggle @(p.IsFeatured?"on":"off")">@(p.IsFeatured?"Yes":"No")</span>
+                        </td>
+                        <td style="text-align:center;">
+                            <span class="admin-toggle @(p.IsBestseller?"on":"off")">@(p.IsBestseller?"Yes":"No")</span>
+                        </td>
+                        <td style="text-align:center;">
+                            <span class="admin-toggle @(p.IsNew?"on":"off")">@(p.IsNew?"Yes":"No")</span>
+                        </td>
+                        <td style="text-align:center;">
+                            <span class="admin-toggle @(p.IsActive?"on":"off")">@(p.IsActive?"Active":"Inactive")</span>
+                        </td>
                         <td>
                             <div class="d-flex gap-1">
-                                <a href="@Url.Action("ProductEdit","Admin",new{id=p.Id})" class="admin-action-btn edit"><i class="fas fa-edit"></i></a>
+                                <a href="@Url.Action("ProductEdit","Admin",new{id=p.Id})" class="admin-action-btn edit" title="Edit"><i class="fas fa-edit"></i></a>
                                 @using (Html.BeginForm("ProductDelete","Admin",new{id=p.Id},FormMethod.Post,new{@class="d-inline",onsubmit="return confirm('Delete this product?')"}))
                                 {
                                     @Html.AntiForgeryToken()
-                                    <button class="admin-action-btn delete" type="submit"><i class="fas fa-trash"></i></button>
+                                    <button class="admin-action-btn delete" type="submit" title="Delete"><i class="fas fa-trash"></i></button>
                                 }
-                                <a href="@Url.Action("Details","Shop",new{id=p.Id})" class="admin-action-btn view" target="_blank"><i class="fas fa-eye"></i></a>
+                                <a href="@Url.Action("Details","Shop",new{id=p.Id})" class="admin-action-btn view" target="_blank" title="View in shop"><i class="fas fa-eye"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -48,4 +76,28 @@
             </tbody>
         </table>
     </div>
+
+    @* Pagination *@
+    @if (totalPages > 1)
+    {
+        <div class="d-flex justify-content-between align-items-center px-3 py-2 border-top" style="font-size:13px;">
+            <span class="text-muted">
+                Page @curPage of @totalPages &nbsp;(&nbsp;@totalCount products&nbsp;)
+            </span>
+            <ul class="pagination pagination-sm mb-0">
+                <li class="page-item @(curPage==1?"disabled":"")">
+                    <a class="page-link" href="@Url.Action("Products","Admin",new{page=curPage-1})">&laquo;</a>
+                </li>
+                @for (int i = Math.Max(1, curPage-3); i <= Math.Min(totalPages, curPage+3); i++)
+                {
+                    <li class="page-item @(i==curPage?"active":"")">
+                        <a class="page-link" href="@Url.Action("Products","Admin",new{page=i})">@i</a>
+                    </li>
+                }
+                <li class="page-item @(curPage==totalPages?"disabled":"")">
+                    <a class="page-link" href="@Url.Action("Products","Admin",new{page=curPage+1})">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+    }
 </div>

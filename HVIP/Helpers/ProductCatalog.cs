@@ -105,13 +105,14 @@ namespace HVIP.Helpers
             return list;
         }
 
-        // Admin panel — all categories regardless of IsActive
-        public static List<Category> GetCategoriesAdmin()
+        // Admin panel — all categories regardless of IsActive, with paging
+        public static List<Category> GetCategoriesAdmin(int page = 1, int size = 15)
         {
             var list = new List<Category>();
             try
             {
-                const string sql = "SELECT * FROM Categories ORDER BY SortOrder, Id";
+                int skip = (page - 1) * size;
+                string sql = $"SELECT * FROM Categories ORDER BY SortOrder, Id OFFSET {skip} ROWS FETCH NEXT {size} ROWS ONLY";
                 using (var conn = DbHelper.GetOpenConnection())
                 using (var cmd  = new SqlCommand(sql, conn))
                 using (var r    = cmd.ExecuteReader())
@@ -119,6 +120,17 @@ namespace HVIP.Helpers
             }
             catch { }
             return list;
+        }
+
+        public static int GetCategoriesAdminCount()
+        {
+            try
+            {
+                using (var conn = DbHelper.GetOpenConnection())
+                using (var cmd  = new SqlCommand("SELECT COUNT(1) FROM Categories", conn))
+                    return (int)cmd.ExecuteScalar();
+            }
+            catch { return 0; }
         }
 
         public static Category GetCategory(int id)
@@ -152,9 +164,22 @@ namespace HVIP.Helpers
             FROM   Products  p
             JOIN   Categories c ON c.Id = p.CategoryId";
 
-        public static List<Product> GetAllAdmin()
+        public static List<Product> GetAllAdmin(int page = 1, int size = 20)
         {
-            return QueryProducts(ProductSelectAdmin + " ORDER BY p.Id");
+            int skip = (page - 1) * size;
+            string sql = ProductSelectAdmin + $" ORDER BY p.Id OFFSET {skip} ROWS FETCH NEXT {size} ROWS ONLY";
+            return QueryProducts(sql);
+        }
+
+        public static int GetAllAdminCount()
+        {
+            try
+            {
+                using (var conn = DbHelper.GetOpenConnection())
+                using (var cmd  = new SqlCommand("SELECT COUNT(1) FROM Products", conn))
+                    return (int)cmd.ExecuteScalar();
+            }
+            catch { return 0; }
         }
 
         public static Product GetByIdAdmin(int id)
