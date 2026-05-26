@@ -15,5 +15,7 @@ namespace HVIP.Models
         public string   State        { get; set; }
         public string   Pincode      { get; set; }
         public bool     IsAdmin      { get; set; }
+        public bool     IsActive     { get; set; } = true;
+        public int      OrderCount   { get; set; }   // admin list only
     }
 }

@@ -1,0 +1,118 @@
+@model List<HVIP.Models.User>
+@{ Layout = "~/Views/Admin/_AdminLayout.cshtml"; ViewBag.Title = "User Management"; ViewBag.AdminPage = "users"; }
+
+<div class="admin-card">
+    <div class="admin-card-header d-flex justify-content-between align-items-center">
+        <span><i class="fas fa-users me-2"></i>All Users (@ViewBag.TotalCount)</span>
+    </div>
+
+    <div class="table-responsive">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th style="width:50px;">#</th>
+                    <th>Name / Email</th>
+                    <th>Phone</th>
+                    <th>Registered</th>
+                    <th class="text-center">Orders</th>
+                    <th class="text-center">Role</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="8" class="text-center text-muted py-5"><i class="fas fa-users fa-2x d-block mb-2"></i>No users yet</td></tr>
+                }
+                @foreach (var u in Model)
+                {
+                    string initials = (u.Name.Length > 0 ? u.Name[0].ToString() : "?").ToUpper();
+                    <tr id="user-row-@u.Id">
+                        <td>@u.Id</td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#1a6e2e,#4caf50);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0;">
+                                    @initials
+                                </div>
+                                <div>
+                                    <div style="font-weight:600;font-size:14px;">@u.Name</div>
+                                    <div style="font-size:12px;color:var(--text-muted);">@u.Email</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="font-size:13px;">@(string.IsNullOrEmpty(u.Phone) ? "-" : u.Phone)</td>
+                        <td style="font-size:13px;">@u.RegisteredOn.ToString("dd MMM yyyy")</td>
+                        <td class="text-center">
+                            <span class="admin-badge">@u.OrderCount</span>
+                        </td>
+                        <td class="text-center">
+                            @if (u.IsAdmin)
+                            { <span class="badge-pill" style="background:#f3e5f5;color:#6a1b9a;font-size:11px;padding:4px 10px;border-radius:20px;">Admin</span> }
+                            else
+                            { <span class="badge-pill" style="background:#e3f2fd;color:#0277bd;font-size:11px;padding:4px 10px;border-radius:20px;">User</span> }
+                        </td>
+                        <td class="text-center">
+                            <span id="active-badge-@u.Id">
+                                @if (u.IsActive)
+                                { <span class="badge-pill" style="background:#e8f5e9;color:#1a6e2e;font-size:11px;padding:4px 10px;border-radius:20px;">Active</span> }
+                                else
+                                { <span class="badge-pill" style="background:#ffebee;color:#c62828;font-size:11px;padding:4px 10px;border-radius:20px;">Blocked</span> }
+                            </span>
+                        </td>
+                        <td class="text-center">
+                            <div class="d-flex gap-1 justify-content-center flex-wrap">
+                                <a href="@Url.Action("UserDetail","Admin",new{id=u.Id})" class="admin-action-btn edit" title="View Details"><i class="fas fa-eye"></i></a>
+                                <button class="admin-action-btn" title="@(u.IsActive?"Block User":"Unblock User")"
+                                        style="background:@(u.IsActive?"#fff3e0":"#e8f5e9");color:@(u.IsActive?"#e65100":"#1a6e2e");border:1px solid @(u.IsActive?"#ffcc80":"#a5d6a7");"
+                                        onclick="toggleUser(@u.Id,'IsActive',this)">
+                                    <i class="fas fa-@(u.IsActive?"ban":"check-circle")"></i>
+                                </button>
+                                <button class="admin-action-btn" title="@(u.IsAdmin?"Remove Admin":"Make Admin")"
+                                        style="background:#f3e5f5;color:#6a1b9a;border:1px solid #ce93d8;"
+                                        onclick="toggleUser(@u.Id,'IsAdmin',this)">
+                                    <i class="fas fa-user-shield"></i>
+                                </button>
+                                @using (Html.BeginForm("UserDelete","Admin",FormMethod.Post,new{@class="d-inline",onsubmit="return confirm('Delete this user?')"}))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@u.Id" />
+                                    <button type="submit" class="admin-action-btn delete" title="Delete User"><i class="fas fa-trash-alt"></i></button>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @* Pagination *@
+    @if (ViewBag.TotalPages > 1)
+    {
+        int pg   = (int)ViewBag.Page;
+        int tot  = (int)ViewBag.TotalPages;
+        <div class="d-flex justify-content-center align-items-center gap-2 p-3 flex-wrap">
+            @if (pg > 1)
+            { <a href="@Url.Action("Users","Admin",new{page=pg-1})" class="page-item-btn"><i class="fas fa-chevron-left"></i></a> }
+            @for (int i = Math.Max(1,pg-3); i <= Math.Min(tot,pg+3); i++)
+            {
+                <a href="@Url.Action("Users","Admin",new{page=i})"
+                   class="page-item-btn @(i==pg?"active":"")">@i</a>
+            }
+            @if (pg < tot)
+            { <a href="@Url.Action("Users","Admin",new{page=pg+1})" class="page-item-btn"><i class="fas fa-chevron-right"></i></a> }
+            <span style="font-size:13px;color:var(--text-muted);margin-left:8px;">Page @pg of @tot</span>
+        </div>
+    }
+</div>
+
+@section scripts {
+<script>
+function toggleUser(id, field, btn) {
+    $.post('@Url.Action("UserToggle","Admin")', { id: id, field: field }, function(r) {
+        if (r.success) location.reload();
+    });
+}
+</script>
+}

@@ -110,10 +110,9 @@
 
                         @if (Model.Shipping > 0)
                         {
-                            var needed = 500 - Model.SubTotal;
                             <div class="free-ship-note">
                                 <i class="fas fa-truck"></i>
-                                Add &#8377;@needed.ToString("0") more for FREE delivery!
+                                Add &#8377;@Model.NeededForFree.ToString("0") more for FREE delivery!
                             </div>
                         }
                         else

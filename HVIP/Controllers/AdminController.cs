@@ -283,5 +283,68 @@ namespace HVIP.Controllers
             ViewBag.Title = "Contact Messages";
             return View(AdminRepository.GetMessages());
         }
+
+        // ══ USERS ═════════════════════════════════════════════
+
+        public ActionResult Users(int page = 1)
+        {
+            const int size = 20;
+            int total = UserRepository.GetAllAdminCount();
+            ViewBag.Title      = "User Management";
+            ViewBag.Page       = page;
+            ViewBag.PageSize   = size;
+            ViewBag.TotalCount = total;
+            ViewBag.TotalPages = (int)System.Math.Ceiling((double)total / size);
+            return View(UserRepository.GetAllAdmin(page, size));
+        }
+
+        public ActionResult UserDetail(int id)
+        {
+            var user = UserRepository.GetById(id);
+            if (user == null) return HttpNotFound();
+            ViewBag.Title      = "User: " + user.Name;
+            ViewBag.UserOrders = UserRepository.GetUserOrders(id);
+            return View(user);
+        }
+
+        [HttpPost]
+        public JsonResult UserToggle(int id, string field)
+        {
+            bool ok = false;
+            if (field == "IsActive") ok = UserRepository.ToggleActive(id);
+            else if (field == "IsAdmin") ok = UserRepository.ToggleAdmin(id);
+            return Json(new { success = ok });
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult UserDelete(int id)
+        {
+            UserRepository.DeleteUser(id);
+            TempData["AdminMsg"] = "User deleted.";
+            return RedirectToAction("Users");
+        }
+
+        // ══ SHIPPING SETTINGS ═════════════════════════════════
+
+        [HttpGet]
+        public ActionResult ShippingSettings()
+        {
+            ViewBag.Title = "Shipping Settings";
+            return View(HVIP.Helpers.ShippingConfig.GetSettings());
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult ShippingSettings(HVIP.Models.ShippingSettings m)
+        {
+            if (m.FreeThreshold < 0 || m.Charge < 0)
+            {
+                ModelState.AddModelError("", "Values must be 0 or greater.");
+                ViewBag.Title = "Shipping Settings";
+                return View(m);
+            }
+            HVIP.Helpers.ShippingConfig.SaveSettings(m.FreeThreshold, m.Charge);
+            TempData["AdminMsg"] = "Shipping settings saved!";
+            return RedirectToAction("ShippingSettings");
+        }
     }
 }

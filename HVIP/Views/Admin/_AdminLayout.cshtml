@@ -23,16 +23,16 @@
         </div>
 
         <nav class="admin-nav">
-            <a href="@Url.Action("Index","Admin")"      class="admin-nav-link @(ViewBag.AdminPage=="dashboard"?"active":"")"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
-            <a href="@Url.Action("Products","Admin")"   class="admin-nav-link @(ViewBag.AdminPage=="products"?"active":"")"><i class="fas fa-pills"></i><span>Products</span></a>
-            <a href="@Url.Action("Categories","Admin")" class="admin-nav-link @(ViewBag.AdminPage=="categories"?"active":"")"><i class="fas fa-th-large"></i><span>Categories</span></a>
-            <a href="@Url.Action("Banners","Admin")"    class="admin-nav-link @(ViewBag.AdminPage=="banners"?"active":"")"><i class="fas fa-images"></i><span>Banners</span></a>
-            <a href="@Url.Action("Orders","Admin")"     class="admin-nav-link @(ViewBag.AdminPage=="orders"?"active":"")"><i class="fas fa-shopping-bag"></i><span>Orders</span></a>
-            <a href="@Url.Action("Messages","Admin")"   class="admin-nav-link @(ViewBag.AdminPage=="messages"?"active":"")">
-                <i class="fas fa-envelope"></i><span>Messages</span>
-            </a>
+            <a href="@Url.Action("Index","Admin")"            class="admin-nav-link @(ViewBag.AdminPage=="dashboard"?"active":"")"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+            <a href="@Url.Action("Products","Admin")"         class="admin-nav-link @(ViewBag.AdminPage=="products"?"active":"")"><i class="fas fa-pills"></i><span>Products</span></a>
+            <a href="@Url.Action("Categories","Admin")"       class="admin-nav-link @(ViewBag.AdminPage=="categories"?"active":"")"><i class="fas fa-th-large"></i><span>Categories</span></a>
+            <a href="@Url.Action("Banners","Admin")"          class="admin-nav-link @(ViewBag.AdminPage=="banners"?"active":"")"><i class="fas fa-images"></i><span>Banners</span></a>
+            <a href="@Url.Action("Orders","Admin")"           class="admin-nav-link @(ViewBag.AdminPage=="orders"?"active":"")"><i class="fas fa-shopping-bag"></i><span>Orders</span></a>
+            <a href="@Url.Action("Users","Admin")"            class="admin-nav-link @(ViewBag.AdminPage=="users"?"active":"")"><i class="fas fa-users"></i><span>Users</span></a>
+            <a href="@Url.Action("Messages","Admin")"         class="admin-nav-link @(ViewBag.AdminPage=="messages"?"active":"")"><i class="fas fa-envelope"></i><span>Messages</span></a>
             <div class="admin-nav-divider"></div>
-            <a href="@Url.Action("Index","Home")"  class="admin-nav-link" target="_blank"><i class="fas fa-external-link-alt"></i><span>View Site</span></a>
+            <a href="@Url.Action("ShippingSettings","Admin")" class="admin-nav-link @(ViewBag.AdminPage=="shipping"?"active":"")"><i class="fas fa-truck"></i><span>Shipping</span></a>
+            <a href="@Url.Action("Index","Home")"             class="admin-nav-link" target="_blank"><i class="fas fa-external-link-alt"></i><span>View Site</span></a>
         </nav>
     </aside>
 

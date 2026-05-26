@@ -126,6 +126,7 @@
     <Compile Include="Controllers\CartController.cs" />
     <Compile Include="Controllers\CheckoutController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SeoController.cs" />
     <Compile Include="Controllers\ShopController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -137,6 +138,7 @@
     <Compile Include="Helpers\DbHelper.cs" />
     <Compile Include="Helpers\OrderRepository.cs" />
     <Compile Include="Helpers\ProductCatalog.cs" />
+    <Compile Include="Helpers\ShippingConfig.cs" />
     <Compile Include="Helpers\UserRepository.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Category.cs" />
@@ -149,6 +151,7 @@
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductFormViewModel.cs" />
     <Compile Include="Models\RegisterViewModel.cs" />
+    <Compile Include="Models\ShippingSettings.cs" />
     <Compile Include="Models\ShopViewModel.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

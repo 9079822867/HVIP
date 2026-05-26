@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using HVIP.Models;
@@ -24,8 +25,15 @@ namespace HVIP.Helpers
                 RegisteredOn = r["RegisteredOn"] == DBNull.Value
                                   ? DateTime.Now
                                   : (DateTime)r["RegisteredOn"],
-                IsAdmin      = r["IsAdmin"] != DBNull.Value && (bool)r["IsAdmin"]
+                IsAdmin      = r["IsAdmin"]  != DBNull.Value && (bool)r["IsAdmin"],
+                IsActive     = SafeBool(r, "IsActive", true)
             };
+        }
+
+        private static bool SafeBool(SqlDataReader r, string col, bool defaultVal)
+        {
+            try { return r[col] != DBNull.Value && (bool)r[col]; }
+            catch { return defaultVal; }
         }
 
         // ── Queries ───────────────────────────────────────────
@@ -51,7 +59,9 @@ namespace HVIP.Helpers
                     cmd.Parameters.AddWithValue("@Hash",  hash);
                     using (var r = cmd.ExecuteReader())
                     {
-                        return r.Read() ? MapUser(r) : null;
+                        if (!r.Read()) return null;
+                        var u = MapUser(r);
+                        return u.IsActive ? u : null;   // blocked users cannot log in
                     }
                 }
             }
@@ -139,5 +149,90 @@ namespace HVIP.Helpers
             }
             catch { return false; }
         }
+
+        // ══ Admin methods ══════════════════════════════════════
+
+        public static List<User> GetAllAdmin(int page = 1, int size = 20)
+        {
+            var list = new List<User>();
+            int skip = (page - 1) * size;
+            const string sql = @"
+                SELECT u.*, ISNULL(o.Cnt,0) AS OrderCount
+                FROM Users u
+                LEFT JOIN (SELECT UserId, COUNT(1) Cnt FROM Orders GROUP BY UserId) o
+                       ON o.UserId = u.Id
+                ORDER BY u.RegisteredOn DESC
+                OFFSET @Skip ROWS FETCH NEXT @Size ROWS ONLY";
+            try
+            {
+                using (var conn = DbHelper.GetOpenConnection())
+                using (var cmd  = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Skip", skip);
+                    cmd.Parameters.AddWithValue("@Size", size);
+                    using (var r = cmd.ExecuteReader())
+                        while (r.Read())
+                        {
+                            var u = MapUser(r);
+                            u.OrderCount = (int)r["OrderCount"];
+                            list.Add(u);
+                        }
+                }
+            }
+            catch { }
+            return list;
+        }
+
+        public static int GetAllAdminCount()
+            => DbHelper.Scalar<int>("SELECT COUNT(1) FROM Users");
+
+        public static List<OrderSummary> GetUserOrders(int userId)
+        {
+            var list = new List<OrderSummary>();
+            const string sql = @"
+                SELECT o.Id, o.OrderNumber, o.CustomerName, o.Email,
+                       o.GrandTotal, o.PaymentMethod, o.Status, o.OrderDate,
+                       (SELECT COUNT(1) FROM OrderItems WHERE OrderId=o.Id) AS ItemCount
+                FROM Orders o
+                WHERE o.UserId = @UserId
+                ORDER BY o.OrderDate DESC";
+            try
+            {
+                using (var conn = DbHelper.GetOpenConnection())
+                using (var cmd  = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    using (var r = cmd.ExecuteReader())
+                        while (r.Read())
+                            list.Add(new OrderSummary
+                            {
+                                Id            = (int)r["Id"],
+                                OrderNumber   = r["OrderNumber"]   as string,
+                                CustomerName  = r["CustomerName"]  as string,
+                                Email         = r["Email"]         as string,
+                                GrandTotal    = (decimal)r["GrandTotal"],
+                                PaymentMethod = r["PaymentMethod"] as string,
+                                Status        = r["Status"]        as string,
+                                OrderDate     = (DateTime)r["OrderDate"],
+                                ItemCount     = (int)r["ItemCount"]
+                            });
+            }
+            catch { }
+            return list;
+        }
+
+        public static bool ToggleActive(int id)
+            => DbHelper.Execute(
+                "UPDATE Users SET IsActive = CASE WHEN IsActive=1 THEN 0 ELSE 1 END WHERE Id=@Id",
+                new[] { new SqlParameter("@Id", id) }) > 0;
+
+        public static bool ToggleAdmin(int id)
+            => DbHelper.Execute(
+                "UPDATE Users SET IsAdmin = CASE WHEN IsAdmin=1 THEN 0 ELSE 1 END WHERE Id=@Id",
+                new[] { new SqlParameter("@Id", id) }) > 0;
+
+        public static bool DeleteUser(int id)
+            => DbHelper.Execute("DELETE FROM Users WHERE Id=@Id",
+                                new[] { new SqlParameter("@Id", id) }) > 0;
     }
 }

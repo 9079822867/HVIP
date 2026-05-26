@@ -51,11 +51,13 @@
         <div class="admin-card">
             <div class="admin-card-header"><i class="fas fa-bolt me-2"></i>Quick Actions</div>
             <div class="d-flex flex-wrap gap-2 p-3">
-                <a href="@Url.Action("ProductAdd","Admin")"  class="admin-quick-btn" style="background:#1a6e2e;"><i class="fas fa-plus me-1"></i>Add Product</a>
-                <a href="@Url.Action("CategoryAdd","Admin")" class="admin-quick-btn" style="background:#0277bd;"><i class="fas fa-plus me-1"></i>Add Category</a>
-                <a href="@Url.Action("BannerAdd","Admin")"   class="admin-quick-btn" style="background:#6a1b9a;"><i class="fas fa-plus me-1"></i>Add Banner</a>
-                <a href="@Url.Action("Orders","Admin")"      class="admin-quick-btn" style="background:#e65100;"><i class="fas fa-list me-1"></i>View Orders</a>
-                <a href="@Url.Action("Messages","Admin")"    class="admin-quick-btn" style="background:#37474f;"><i class="fas fa-envelope me-1"></i>Messages @(Model.UnreadMessages>0 ? "("+Model.UnreadMessages+" new)" : "")</a>
+                <a href="@Url.Action("ProductAdd","Admin")"       class="admin-quick-btn" style="background:#1a6e2e;"><i class="fas fa-plus me-1"></i>Add Product</a>
+                <a href="@Url.Action("CategoryAdd","Admin")"      class="admin-quick-btn" style="background:#0277bd;"><i class="fas fa-plus me-1"></i>Add Category</a>
+                <a href="@Url.Action("BannerAdd","Admin")"        class="admin-quick-btn" style="background:#6a1b9a;"><i class="fas fa-plus me-1"></i>Add Banner</a>
+                <a href="@Url.Action("Orders","Admin")"           class="admin-quick-btn" style="background:#e65100;"><i class="fas fa-list me-1"></i>View Orders</a>
+                <a href="@Url.Action("Users","Admin")"            class="admin-quick-btn" style="background:#00838f;"><i class="fas fa-users me-1"></i>Manage Users</a>
+                <a href="@Url.Action("ShippingSettings","Admin")" class="admin-quick-btn" style="background:#37474f;"><i class="fas fa-truck me-1"></i>Shipping</a>
+                <a href="@Url.Action("Messages","Admin")"         class="admin-quick-btn" style="background:#558b2f;"><i class="fas fa-envelope me-1"></i>Messages @(Model.UnreadMessages>0 ? "("+Model.UnreadMessages+" new)" : "")</a>
             </div>
         </div>
     </div>

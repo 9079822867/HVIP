@@ -182,6 +182,30 @@ BEGIN
 END
 GO
 
+-- ── USERS – IsActive column (new) ──────────────────────────
+IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=OBJECT_ID('Users') AND name='IsActive')
+BEGIN
+    ALTER TABLE Users ADD IsActive BIT NOT NULL DEFAULT 1;
+    PRINT '[Users] IsActive column added.';
+END
+GO
+
+-- ── SHIPPING SETTINGS ──────────────────────────────────────
+IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name='ShippingSettings')
+BEGIN
+    CREATE TABLE ShippingSettings (
+        Id             INT           PRIMARY KEY DEFAULT 1,
+        FreeThreshold  DECIMAL(10,2) NOT NULL DEFAULT 500,
+        Charge         DECIMAL(10,2) NOT NULL DEFAULT 60,
+        UpdatedOn      DATETIME      NOT NULL DEFAULT GETDATE()
+    );
+    -- Insert default row
+    INSERT INTO ShippingSettings(Id, FreeThreshold, Charge, UpdatedOn)
+    VALUES(1, 500, 60, GETDATE());
+    PRINT 'Table [ShippingSettings] created with default row.';
+END
+GO
+
 -- ════════════════════════════════════════════════════════════
 --  SEED DATA
 -- ════════════════════════════════════════════════════════════

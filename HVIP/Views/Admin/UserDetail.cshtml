@@ -1,0 +1,123 @@
+@model HVIP.Models.User
+@using HVIP.Models
+@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+    ViewBag.AdminPage = "users";
+    var orders = ViewBag.UserOrders as List<OrderSummary> ?? new List<OrderSummary>();
+    string initials = (Model.Name.Length > 0 ? Model.Name[0].ToString() : "?").ToUpper();
+}
+
+<!-- Back button -->
+<div class="mb-3">
+    <a href="@Url.Action("Users","Admin")" class="admin-link"><i class="fas fa-arrow-left me-1"></i>Back to Users</a>
+</div>
+
+<div class="row g-3">
+    <!-- User Card -->
+    <div class="col-lg-4">
+        <div class="admin-card">
+            <div class="admin-card-header"><i class="fas fa-user me-2"></i>User Profile</div>
+            <div class="p-4 text-center">
+                <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#1a6e2e,#4caf50);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:28px;margin:0 auto 16px;">
+                    @initials
+                </div>
+                <h5 style="font-weight:700;color:var(--primary-dark);">@Model.Name</h5>
+                <div style="font-size:13px;color:var(--text-muted);">@Model.Email</div>
+
+                <div class="d-flex justify-content-center gap-2 mt-3 flex-wrap">
+                    @if (Model.IsAdmin)
+                    { <span class="badge-pill" style="background:#f3e5f5;color:#6a1b9a;padding:5px 14px;border-radius:20px;font-size:12px;">Admin</span> }
+                    else
+                    { <span class="badge-pill" style="background:#e3f2fd;color:#0277bd;padding:5px 14px;border-radius:20px;font-size:12px;">User</span> }
+
+                    @if (Model.IsActive)
+                    { <span class="badge-pill" style="background:#e8f5e9;color:#1a6e2e;padding:5px 14px;border-radius:20px;font-size:12px;">Active</span> }
+                    else
+                    { <span class="badge-pill" style="background:#ffebee;color:#c62828;padding:5px 14px;border-radius:20px;font-size:12px;">Blocked</span> }
+                </div>
+            </div>
+
+            <table class="table table-borderless" style="font-size:13.5px;margin-bottom:0;">
+                <tr><td style="color:var(--text-muted);width:40%;">Phone</td><td><strong>@(string.IsNullOrEmpty(Model.Phone) ? "-" : Model.Phone)</strong></td></tr>
+                <tr><td style="color:var(--text-muted);">Joined</td><td><strong>@Model.RegisteredOn.ToString("dd MMM yyyy")</strong></td></tr>
+                <tr><td style="color:var(--text-muted);">Orders</td><td><strong>@orders.Count</strong></td></tr>
+                @if (!string.IsNullOrEmpty(Model.Address))
+                {
+                    <tr><td style="color:var(--text-muted);">Address</td><td><strong>@Model.Address</strong></td></tr>
+                }
+                @if (!string.IsNullOrEmpty(Model.City))
+                {
+                    <tr><td style="color:var(--text-muted);">City</td><td><strong>@Model.City, @Model.State @Model.Pincode</strong></td></tr>
+                }
+            </table>
+
+            <div class="p-3 border-top d-flex gap-2 flex-wrap">
+                <button class="admin-action-btn" style="background:@(Model.IsActive?"#fff3e0":"#e8f5e9");color:@(Model.IsActive?"#e65100":"#1a6e2e");border:1px solid @(Model.IsActive?"#ffcc80":"#a5d6a7");padding:8px 16px;border-radius:6px;"
+                        onclick="toggleAndReload(@Model.Id,'IsActive')">
+                    <i class="fas fa-@(Model.IsActive?"ban":"check-circle") me-1"></i>@(Model.IsActive?"Block User":"Unblock User")
+                </button>
+                <button class="admin-action-btn" style="background:#f3e5f5;color:#6a1b9a;border:1px solid #ce93d8;padding:8px 16px;border-radius:6px;"
+                        onclick="toggleAndReload(@Model.Id,'IsAdmin')">
+                    <i class="fas fa-user-shield me-1"></i>@(Model.IsAdmin?"Remove Admin":"Make Admin")
+                </button>
+            </div>
+            <div class="p-3 border-top">
+                @using (Html.BeginForm("UserDelete","Admin",FormMethod.Post,new{onsubmit="return confirm('Permanently delete this user and all their data?')"}))
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="admin-action-btn delete" style="width:100%;justify-content:center;padding:8px 16px;border-radius:6px;">
+                        <i class="fas fa-trash-alt me-1"></i>Delete User
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Orders -->
+    <div class="col-lg-8">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <i class="fas fa-shopping-bag me-2"></i>Orders (@orders.Count)
+            </div>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr><th>Order #</th><th>Items</th><th>Amount</th><th>Payment</th><th>Status</th><th>Date</th></tr>
+                    </thead>
+                    <tbody>
+                        @if (!orders.Any())
+                        {
+                            <tr><td colspan="6" class="text-center text-muted py-4"><i class="fas fa-box-open me-1"></i>No orders yet</td></tr>
+                        }
+                        @foreach (var o in orders)
+                        {
+                            <tr>
+                                <td><strong>#@o.OrderNumber</strong></td>
+                                <td><span class="admin-badge">@o.ItemCount items</span></td>
+                                <td><strong>&#8377;@o.GrandTotal.ToString("N0")</strong></td>
+                                <td>@o.PaymentMethod</td>
+                                <td>
+                                    <span class="admin-status-badge @(o.Status=="Confirmed"?"badge-confirmed":o.Status=="Shipped"?"badge-shipped":"badge-pending")">
+                                        @o.Status
+                                    </span>
+                                </td>
+                                <td style="font-size:12px;">@o.OrderDate.ToString("dd MMM yy, hh:mm tt")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+<script>
+function toggleAndReload(id, field) {
+    $.post('@Url.Action("UserToggle","Admin")', { id: id, field: field }, function(r) {
+        if (r.success) location.reload();
+    });
+}
+</script>
+}
