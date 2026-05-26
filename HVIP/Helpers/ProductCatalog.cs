@@ -124,6 +124,33 @@ namespace HVIP.Helpers
             return QueryProducts(ProductSelect + " ORDER BY p.Id");
         }
 
+        // Admin versions — no IsActive filter so inactive products are visible/editable
+        private const string ProductSelectAdmin = @"
+            SELECT p.*, c.Name AS CategoryName, c.Icon AS CategoryIcon, c.Color AS CategoryColor
+            FROM   Products  p
+            JOIN   Categories c ON c.Id = p.CategoryId";
+
+        public static List<Product> GetAllAdmin()
+        {
+            return QueryProducts(ProductSelectAdmin + " ORDER BY p.Id");
+        }
+
+        public static Product GetByIdAdmin(int id)
+        {
+            try
+            {
+                string sql = ProductSelectAdmin + " WHERE p.Id = @Id";
+                using (var conn = DbHelper.GetOpenConnection())
+                using (var cmd  = new SqlCommand(sql, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    using (var r = cmd.ExecuteReader())
+                        return r.Read() ? MapProduct(r) : null;
+                }
+            }
+            catch { return null; }
+        }
+
         public static Product GetById(int id)
         {
             try

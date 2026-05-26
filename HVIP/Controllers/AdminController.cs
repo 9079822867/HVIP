@@ -29,7 +29,7 @@ namespace HVIP.Controllers
         public ActionResult Products()
         {
             ViewBag.Title = "Products";
-            return View(ProductCatalog.GetAll());
+            return View(ProductCatalog.GetAllAdmin());
         }
 
         [HttpGet]
@@ -51,7 +51,7 @@ namespace HVIP.Controllers
         [HttpGet]
         public ActionResult ProductEdit(int id)
         {
-            var p = ProductCatalog.GetById(id);
+            var p = ProductCatalog.GetByIdAdmin(id);
             if (p == null) return HttpNotFound();
             ViewBag.Title = "Edit Product";
             var f = new ProductFormViewModel
@@ -60,7 +60,7 @@ namespace HVIP.Controllers
                 Description = p.Description, Price = p.Price, OriginalPrice = p.OriginalPrice,
                 CategoryId = p.CategoryId, Brand = p.Brand, Stock = p.Stock, Size = p.Size,
                 IsFeatured = p.IsFeatured, IsBestseller = p.IsBestseller, IsNew = p.IsNew,
-                IsActive = true, Rating = p.Rating, ReviewCount = p.ReviewCount
+                IsActive = p.IsActive, Rating = p.Rating, ReviewCount = p.ReviewCount
             };
             return View("ProductForm", BuildProductForm(f));
         }

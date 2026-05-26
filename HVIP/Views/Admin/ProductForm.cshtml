@@ -6,7 +6,7 @@
         <i class="fas fa-@(Model.IsEdit?"edit":"plus") me-2"></i>@ViewBag.Title
     </div>
     <div class="p-4">
-        @using (Html.BeginForm("", "Admin", FormMethod.Post))
+        @using (Html.BeginForm("ProductEdit", "Admin", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(m => m.Id)

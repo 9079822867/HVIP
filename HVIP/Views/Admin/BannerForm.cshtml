@@ -4,7 +4,7 @@
 <div class="admin-card" style="max-width:700px;">
     <div class="admin-card-header"><i class="fas fa-images me-2"></i>@ViewBag.Title</div>
     <div class="p-4">
-        @using (Html.BeginForm("", "Admin", FormMethod.Post))
+        @using (Html.BeginForm("BannerEdit", "Admin", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(m => m.Id)

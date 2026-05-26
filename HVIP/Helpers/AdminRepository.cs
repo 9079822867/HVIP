@@ -149,7 +149,7 @@ namespace HVIP.Helpers
             new SqlParameter("@Ic", c.Icon  ?? "fas fa-pills"),
             new SqlParameter("@Co", c.Color ?? "#1b5e20"),
             new SqlParameter("@De", (object)c.Description ?? DBNull.Value),
-            new SqlParameter("@So", 0)
+            new SqlParameter("@So", (object)c.SortOrder)
         };
 
         // ── Orders List ───────────────────────────────────────

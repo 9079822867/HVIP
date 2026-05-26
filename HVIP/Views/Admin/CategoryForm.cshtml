@@ -4,7 +4,7 @@
 <div class="admin-card" style="max-width:560px;">
     <div class="admin-card-header"><i class="fas fa-th-large me-2"></i>@ViewBag.Title</div>
     <div class="p-4">
-        @using (Html.BeginForm("", "Admin", FormMethod.Post))
+        @using (Html.BeginForm("CategoryEdit", "Admin", FormMethod.Post))
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(m => m.Id)
