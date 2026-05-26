@@ -235,5 +235,10 @@ namespace HVIP.Helpers
         public static bool DeleteUser(int id)
             => DbHelper.Execute("DELETE FROM Users WHERE Id=@Id",
                                 new[] { new SqlParameter("@Id", id) }) > 0;
+
+        public static bool ChangePassword(int userId, string newPassword)
+            => DbHelper.Execute("UPDATE Users SET PasswordHash=@H WHERE Id=@Id",
+                                new[] { new SqlParameter("@H",  AuthHelper.HashPassword(newPassword)),
+                                        new SqlParameter("@Id", userId) }) > 0;
     }
 }

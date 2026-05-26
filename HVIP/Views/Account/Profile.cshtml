@@ -1,6 +1,8 @@
 @model HVIP.Models.User
+@using HVIP.Models
 @{
     ViewBag.Title = "My Profile";
+    var orders = ViewBag.UserOrders as List<OrderSummary> ?? new List<OrderSummary>();
 }
 
 <!-- Hero -->
@@ -13,6 +15,21 @@
         <h2 style="margin:10px 0 4px;font-weight:800;">@Model.Name</h2>
         <p style="opacity:.8;font-size:14px;"><i class="fas fa-envelope me-1"></i>@Model.Email</p>
         <p style="opacity:.7;font-size:12px;">Member since @Model.RegisteredOn.ToString("MMMM yyyy")</p>
+
+        <!-- Quick stats -->
+        <div class="d-flex justify-content-center gap-4 mt-3">
+            <div style="text-align:center;">
+                <div style="font-size:24px;font-weight:800;">@orders.Count</div>
+                <div style="font-size:12px;opacity:.75;">Orders</div>
+            </div>
+            <div style="width:1px;background:rgba(255,255,255,.3);"></div>
+            <div style="text-align:center;">
+                <div style="font-size:24px;font-weight:800;">
+                    @(orders.Count(o => o.Status == "Delivered"))
+                </div>
+                <div style="font-size:12px;opacity:.75;">Delivered</div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -117,8 +134,16 @@
                         <i class="fas fa-link me-2"></i>Quick Links
                     </h6>
                     <div class="d-flex flex-column" style="gap:8px;">
+                        <a href="@Url.Action("Orders","Account")" class="profile-quick-link">
+                            <i class="fas fa-shopping-bag me-2"></i>My Orders
+                            @if (orders.Count > 0)
+                            { <span class="badge-pill" style="background:#e8f5e9;color:#1a6e2e;font-size:11px;padding:2px 8px;border-radius:20px;margin-left:auto;">@orders.Count</span> }
+                        </a>
+                        <a href="@Url.Action("ChangePassword","Account")" class="profile-quick-link">
+                            <i class="fas fa-key me-2"></i>Change Password
+                        </a>
                         <a href="@Url.Action("Index","Shop")" class="profile-quick-link">
-                            <i class="fas fa-shopping-bag me-2"></i>Shop Now
+                            <i class="fas fa-store me-2"></i>Shop Now
                         </a>
                         <a href="@Url.Action("Index","Cart")" class="profile-quick-link">
                             <i class="fas fa-cart-shopping me-2"></i>My Cart
@@ -137,6 +162,28 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Recent Order Peek -->
+                @if (orders.Count > 0)
+                {
+                    var last = orders[0];
+                    <div class="auth-card mt-3" style="border-radius:16px;padding:20px;">
+                        <h6 style="color:var(--primary-dark);font-weight:700;margin-bottom:12px;">
+                            <i class="fas fa-clock me-2"></i>Latest Order
+                        </h6>
+                        <div style="font-size:13px;">
+                            <div style="font-weight:600;">@last.OrderNumber</div>
+                            <div style="color:var(--text-muted);font-size:12px;">@last.OrderDate.ToString("dd MMM yyyy")</div>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <span style="font-weight:700;color:var(--primary-dark);">&#8377;@last.GrandTotal.ToString("N0")</span>
+                                <span class="badge-pill" style="background:@(last.Status=="Delivered"?"#e8f5e9":last.Status=="Shipped"?"#e3f2fd":"#fff3e0");color:@(last.Status=="Delivered"?"#1a6e2e":last.Status=="Shipped"?"#0277bd":"#e65100");font-size:11px;padding:3px 10px;border-radius:20px;">@last.Status</span>
+                            </div>
+                        </div>
+                        <a href="@Url.Action("Orders","Account")" style="display:block;text-align:center;font-size:12px;color:var(--primary);margin-top:10px;">
+                            View all orders →
+                        </a>
+                    </div>
+                }
             </div>
 
         </div>

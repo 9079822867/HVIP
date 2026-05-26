@@ -94,9 +94,11 @@ namespace HVIP.Controllers
             if (!AuthHelper.IsLoggedIn(Session))
                 return RedirectToAction("Login", new { returnUrl = "/Account/Profile" });
 
-            var user = UserRepository.GetById(AuthHelper.GetUserId(Session));
+            int userId = AuthHelper.GetUserId(Session);
+            var user   = UserRepository.GetById(userId);
             if (user == null) return RedirectToAction("Login");
 
+            ViewBag.UserOrders = UserRepository.GetUserOrders(userId);
             return View(user);
         }
 
@@ -132,6 +134,73 @@ namespace HVIP.Controllers
             // Update session name if changed
             Session["HVIP_UserName"] = model.Name;
             TempData["ProfileSaved"] = "Profile updated successfully!";
+            return RedirectToAction("Profile");
+        }
+
+        // ── My Orders ──────────────────────────────────────────
+
+        // GET: /Account/Orders
+        public ActionResult Orders()
+        {
+            if (!AuthHelper.IsLoggedIn(Session))
+                return RedirectToAction("Login", new { returnUrl = "/Account/Orders" });
+
+            int userId = AuthHelper.GetUserId(Session);
+            ViewBag.Title = "My Orders";
+            return View(UserRepository.GetUserOrders(userId));
+        }
+
+        // GET: /Account/OrderDetail/5
+        public ActionResult OrderDetail(int id)
+        {
+            if (!AuthHelper.IsLoggedIn(Session))
+                return RedirectToAction("Login");
+
+            int userId = AuthHelper.GetUserId(Session);
+            var order  = OrderRepository.GetDetail(id, userId);
+            if (order == null) return HttpNotFound();
+
+            ViewBag.Title = "Order #" + order.OrderNumber;
+            return View(order);
+        }
+
+        // ── Change Password ────────────────────────────────────
+
+        // GET: /Account/ChangePassword
+        [HttpGet]
+        public ActionResult ChangePassword()
+        {
+            if (!AuthHelper.IsLoggedIn(Session))
+                return RedirectToAction("Login", new { returnUrl = "/Account/ChangePassword" });
+
+            ViewBag.Title = "Change Password";
+            return View(new ChangePasswordViewModel());
+        }
+
+        // POST: /Account/ChangePassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!AuthHelper.IsLoggedIn(Session))
+                return RedirectToAction("Login");
+
+            ViewBag.Title = "Change Password";
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            int userId = AuthHelper.GetUserId(Session);
+            var user   = UserRepository.GetById(userId);
+
+            if (user == null || !AuthHelper.VerifyPassword(model.CurrentPassword, user.PasswordHash))
+            {
+                ModelState.AddModelError("CurrentPassword", "Current password is incorrect.");
+                return View(model);
+            }
+
+            UserRepository.ChangePassword(userId, model.NewPassword);
+            TempData["ProfileSaved"] = "Password changed successfully!";
             return RedirectToAction("Profile");
         }
     }

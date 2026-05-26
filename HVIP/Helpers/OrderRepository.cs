@@ -92,6 +92,75 @@ namespace HVIP.Helpers
         }
 
         /// <summary>
+        /// Returns a single order with its line items for the given user (security check on UserId).
+        /// Returns null if not found or the order belongs to a different user.
+        /// </summary>
+        public static Order GetDetail(int orderId, int userId)
+        {
+            const string orderSql = @"
+                SELECT TOP 1 * FROM Orders
+                WHERE Id = @Id AND (UserId = @UserId OR @UserId = 0)";
+            const string itemsSql = @"
+                SELECT * FROM OrderItems WHERE OrderId = @OrderId";
+            try
+            {
+                using (var conn = DbHelper.GetOpenConnection())
+                {
+                    Order order = null;
+
+                    using (var cmd = new SqlCommand(orderSql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Id",     orderId);
+                        cmd.Parameters.AddWithValue("@UserId", userId);
+                        using (var r = cmd.ExecuteReader())
+                        {
+                            if (!r.Read()) return null;
+                            order = new Order
+                            {
+                                Id            = (int)r["Id"],
+                                OrderNumber   = r["OrderNumber"]   as string,
+                                CustomerName  = r["CustomerName"]  as string,
+                                Email         = r["Email"]         as string,
+                                Phone         = r["Phone"]         as string,
+                                Address       = r["Address"]       as string,
+                                City          = r["City"]          as string,
+                                State         = r["State"]         as string,
+                                Pincode       = r["Pincode"]       as string,
+                                PaymentMethod = r["PaymentMethod"] as string ?? "COD",
+                                SubTotal      = (decimal)r["SubTotal"],
+                                Shipping      = (decimal)r["Shipping"],
+                                GrandTotal    = (decimal)r["GrandTotal"],
+                                Status        = r["Status"]        as string,
+                                OrderDate     = (DateTime)r["OrderDate"],
+                                Items         = new System.Collections.Generic.List<CartItem>()
+                            };
+                        }
+                    }
+
+                    using (var cmd = new SqlCommand(itemsSql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@OrderId", orderId);
+                        using (var r = cmd.ExecuteReader())
+                            while (r.Read())
+                                order.Items.Add(new CartItem
+                                {
+                                    ProductId     = r["ProductId"]     == DBNull.Value ? 0 : (int)r["ProductId"],
+                                    ProductName   = r["ProductName"]   as string ?? "",
+                                    ProductSize   = r["ProductSize"]   as string,
+                                    CategoryIcon  = r["CategoryIcon"]  as string ?? "fas fa-pills",
+                                    CategoryColor = r["CategoryColor"] as string ?? "#1b5e20",
+                                    UnitPrice     = (decimal)r["UnitPrice"],
+                                    Quantity      = (int)r["Quantity"]
+                                });
+                    }
+
+                    return order;
+                }
+            }
+            catch { return null; }
+        }
+
+        /// <summary>
         /// Saves a contact form message to the database.
         /// </summary>
         public static bool SaveContactMessage(ContactMessage msg)

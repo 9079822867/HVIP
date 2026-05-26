@@ -1,0 +1,141 @@
+@model HVIP.Models.Order
+@{
+    ViewBag.Title = "Order #" + Model.OrderNumber;
+    string statusColor = Model.Status == "Delivered" ? "#1a6e2e" : Model.Status == "Shipped" ? "#0277bd" : Model.Status == "Cancelled" ? "#c62828" : "#e65100";
+    string statusBg    = Model.Status == "Delivered" ? "#e8f5e9" : Model.Status == "Shipped" ? "#e3f2fd" : Model.Status == "Cancelled" ? "#ffebee" : "#fff3e0";
+    string statusIcon  = Model.Status == "Delivered" ? "check-circle" : Model.Status == "Shipped" ? "truck" : Model.Status == "Cancelled" ? "times-circle" : "clock";
+}
+
+<!-- Breadcrumb -->
+<div class="breadcrumb-bar">
+    <div class="container">
+        <span class="breadcrumb-list">
+            <a href="@Url.Action("Index","Home")"><i class="fas fa-home"></i> Home</a>
+            <span class="sep">/</span>
+            <a href="@Url.Action("Profile","Account")">My Account</a>
+            <span class="sep">/</span>
+            <a href="@Url.Action("Orders","Account")">My Orders</a>
+            <span class="sep">/</span>
+            <span>#@Model.OrderNumber</span>
+        </span>
+    </div>
+</div>
+
+<section class="py-section bg-light-green">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h4 style="color:var(--primary-dark);font-weight:700;margin:0;">
+                <i class="fas fa-receipt me-2"></i>Order #@Model.OrderNumber
+            </h4>
+            <a href="@Url.Action("Orders","Account")" style="color:var(--primary);font-size:14px;">
+                <i class="fas fa-arrow-left me-1"></i>Back to Orders
+            </a>
+        </div>
+
+        <div class="row g-3">
+            <!-- Left: Items + Summary -->
+            <div class="col-lg-8">
+                <!-- Status banner -->
+                <div class="auth-card mb-3" style="border-radius:14px;padding:16px 20px;background:@statusBg;border:none;">
+                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                        <div style="font-size:32px;color:@statusColor;"><i class="fas fa-@statusIcon"></i></div>
+                        <div>
+                            <div style="font-weight:700;font-size:16px;color:@statusColor;">@Model.Status</div>
+                            <div style="font-size:13px;color:var(--text-muted);">
+                                Placed on @Model.OrderDate.ToString("dddd, dd MMMM yyyy 'at' hh:mm tt")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Items -->
+                <div class="auth-card mb-3" style="border-radius:14px;padding:0;overflow:hidden;">
+                    <div style="background:#f8fdf8;border-bottom:1px solid #e0f2e0;padding:14px 20px;font-weight:700;color:var(--primary-dark);font-size:14px;">
+                        <i class="fas fa-box me-2"></i>Ordered Items (@Model.Items.Count)
+                    </div>
+                    <div style="padding:4px 0;">
+                        @foreach (var item in Model.Items)
+                        {
+                            <div class="order-item-row" style="margin:0;padding:14px 20px;border-bottom:1px solid #f0f0f0;">
+                                <div class="order-item-icon" style="background:@(item.CategoryColor ?? "#1b5e20");">
+                                    <i class="@(item.CategoryIcon ?? "fas fa-pills")"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div style="font-weight:600;font-size:14px;">@item.ProductName</div>
+                                    <div style="font-size:12px;color:var(--text-muted);">
+                                        @if (!string.IsNullOrEmpty(item.ProductSize))
+                                        { <span>Size: @item.ProductSize &nbsp;|&nbsp; </span> }
+                                        <span>Qty: @item.Quantity &nbsp;|&nbsp; &#8377;@item.UnitPrice.ToString("0") each</span>
+                                    </div>
+                                </div>
+                                <div style="font-weight:700;font-size:15px;color:var(--primary-dark);white-space:nowrap;">
+                                    &#8377;@item.Total.ToString("0")
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="auth-card" style="border-radius:14px;padding:20px;">
+                    <h6 style="color:var(--primary-dark);font-weight:700;margin-bottom:14px;"><i class="fas fa-calculator me-2"></i>Price Summary</h6>
+                    <div class="sum-row" style="justify-content:space-between;display:flex;padding:6px 0;border-bottom:1px solid #f0f0f0;">
+                        <span>Subtotal</span><span>&#8377;@Model.SubTotal.ToString("0")</span>
+                    </div>
+                    <div class="sum-row" style="justify-content:space-between;display:flex;padding:6px 0;border-bottom:1px solid #f0f0f0;">
+                        <span>Shipping</span>
+                        <span>@(Model.Shipping == 0 ? "FREE" : "₹" + Model.Shipping.ToString("0"))</span>
+                    </div>
+                    <div style="justify-content:space-between;display:flex;padding:10px 0;font-weight:700;font-size:16px;color:var(--primary-dark);">
+                        <span>Grand Total</span><span>&#8377;@Model.GrandTotal.ToString("N0")</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Delivery + Payment -->
+            <div class="col-lg-4">
+                <!-- Delivery Address -->
+                <div class="auth-card mb-3" style="border-radius:14px;padding:20px;">
+                    <h6 style="color:var(--primary-dark);font-weight:700;margin-bottom:14px;">
+                        <i class="fas fa-map-marker-alt me-2"></i>Delivery Address
+                    </h6>
+                    <div style="font-size:13.5px;line-height:1.8;color:#444;">
+                        <div style="font-weight:600;">@Model.CustomerName</div>
+                        <div>@Model.Phone</div>
+                        <div>@Model.Address</div>
+                        <div>@Model.City, @Model.State</div>
+                        <div>PIN: @Model.Pincode</div>
+                    </div>
+                </div>
+
+                <!-- Payment Info -->
+                <div class="auth-card mb-3" style="border-radius:14px;padding:20px;">
+                    <h6 style="color:var(--primary-dark);font-weight:700;margin-bottom:14px;">
+                        <i class="fas fa-credit-card me-2"></i>Payment
+                    </h6>
+                    <div style="font-size:13.5px;color:#444;line-height:1.8;">
+                        <div><strong>Method:</strong> @Model.PaymentMethod</div>
+                        <div><strong>Status:</strong>
+                            <span style="color:@(Model.PaymentMethod=="COD"?"#e65100":"#1a6e2e");font-weight:600;">
+                                @(Model.PaymentMethod == "COD" ? "Pay on Delivery" : "Paid")
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Help -->
+                <div class="auth-card" style="border-radius:14px;padding:20px;background:#f8fdf8;border:1px solid #c8e6c9;">
+                    <h6 style="color:var(--primary-dark);font-weight:700;margin-bottom:10px;">
+                        <i class="fas fa-headset me-2"></i>Need Help?
+                    </h6>
+                    <p style="font-size:13px;color:#555;margin-bottom:12px;">
+                        For queries about this order, contact our support team.
+                    </p>
+                    <a href="@Url.Action("Contact","Home")" class="btn-cart-lg" style="padding:9px 16px;font-size:13px;border-radius:8px;display:block;text-align:center;">
+                        <i class="fas fa-envelope me-1"></i>Contact Support
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,100 @@
+@model List<HVIP.Models.OrderSummary>
+@{
+    ViewBag.Title = "My Orders";
+}
+
+<!-- Breadcrumb -->
+<div class="breadcrumb-bar">
+    <div class="container">
+        <span class="breadcrumb-list">
+            <a href="@Url.Action("Index","Home")"><i class="fas fa-home"></i> Home</a>
+            <span class="sep">/</span>
+            <a href="@Url.Action("Profile","Account")">My Account</a>
+            <span class="sep">/</span>
+            <span>My Orders</span>
+        </span>
+    </div>
+</div>
+
+<!-- Hero -->
+<div style="background:linear-gradient(135deg,#0d4a1e,#1a6e2e);padding:40px 0;color:#fff;">
+    <div class="container">
+        <h2 style="font-weight:800;margin:0 0 4px;"><i class="fas fa-shopping-bag me-2"></i>My Orders</h2>
+        <p style="opacity:.8;font-size:14px;margin:0;">@Model.Count order@(Model.Count == 1 ? "" : "s") placed</p>
+    </div>
+</div>
+
+<section class="py-section bg-light-green">
+    <div class="container">
+        @if (TempData["ProfileSaved"] != null)
+        {
+            <div class="auth-alert mb-4" style="background:#e8f5e9;border:1px solid var(--primary-light);color:#1b5e20;border-radius:10px;padding:14px 18px;">
+                <i class="fas fa-check-circle me-1"></i>@TempData["ProfileSaved"]
+            </div>
+        }
+
+        @if (!Model.Any())
+        {
+            <div class="empty-cart" style="padding:60px 20px;">
+                <i class="fas fa-shopping-bag" style="font-size:48px;color:var(--primary-light);display:block;margin-bottom:16px;"></i>
+                <h4>No Orders Yet</h4>
+                <p style="color:var(--text-muted);margin-bottom:24px;">You haven't placed any orders yet. Start shopping!</p>
+                <a href="@Url.Action("Index","Shop")" class="btn-continue"><i class="fas fa-store me-2"></i>Shop Now</a>
+            </div>
+        }
+        else
+        {
+            <div class="d-flex flex-column gap-3">
+                @foreach (var o in Model)
+                {
+                    string statusColor  = o.Status == "Delivered" ? "#1a6e2e"  : o.Status == "Shipped" ? "#0277bd" : o.Status == "Cancelled" ? "#c62828" : "#e65100";
+                    string statusBg     = o.Status == "Delivered" ? "#e8f5e9"  : o.Status == "Shipped" ? "#e3f2fd" : o.Status == "Cancelled" ? "#ffebee" : "#fff3e0";
+                    string statusIcon   = o.Status == "Delivered" ? "check-circle" : o.Status == "Shipped" ? "truck" : o.Status == "Cancelled" ? "times-circle" : "clock";
+
+                    <div class="auth-card" style="border-radius:14px;padding:0;overflow:hidden;">
+                        <!-- Order header -->
+                        <div style="background:#f8fdf8;border-bottom:1px solid #e0f2e0;padding:14px 20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                            <div>
+                                <div style="font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;">Order Number</div>
+                                <div style="font-weight:700;font-size:15px;color:var(--primary-dark);">#@o.OrderNumber</div>
+                            </div>
+                            <div>
+                                <div style="font-size:12px;color:var(--text-muted);">Date</div>
+                                <div style="font-weight:600;font-size:14px;">@o.OrderDate.ToString("dd MMM yyyy")</div>
+                            </div>
+                            <div>
+                                <div style="font-size:12px;color:var(--text-muted);">Items</div>
+                                <div style="font-weight:600;font-size:14px;">@o.ItemCount item@(o.ItemCount==1?"":"")</div>
+                            </div>
+                            <div>
+                                <div style="font-size:12px;color:var(--text-muted);">Total</div>
+                                <div style="font-weight:800;font-size:16px;color:var(--primary-dark);">&#8377;@o.GrandTotal.ToString("N0")</div>
+                            </div>
+                            <div>
+                                <span style="background:@statusBg;color:@statusColor;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;">
+                                    <i class="fas fa-@statusIcon me-1"></i>@o.Status
+                                </span>
+                            </div>
+                        </div>
+                        <!-- Order footer -->
+                        <div style="padding:12px 20px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <div style="font-size:13px;color:var(--text-muted);">
+                                <i class="fas fa-credit-card me-1"></i>@o.PaymentMethod
+                            </div>
+                            <a href="@Url.Action("OrderDetail","Account",new{id=o.Id})"
+                               class="btn-cart-lg" style="padding:9px 20px;font-size:13px;border-radius:8px;">
+                                <i class="fas fa-eye me-1"></i>View Details
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="@Url.Action("Profile","Account")" style="color:var(--primary);font-size:14px;">
+                    <i class="fas fa-arrow-left me-1"></i>Back to Profile
+                </a>
+            </div>
+        }
+    </div>
+</section>
