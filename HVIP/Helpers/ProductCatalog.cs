@@ -19,13 +19,16 @@ namespace HVIP.Helpers
         {
             return new Category
             {
-                Id          = (int)r["Id"],
-                Name        = r["Name"]        as string ?? "",
-                Slug        = r["Slug"]        as string ?? "",
-                Icon        = r["Icon"]        as string ?? "fas fa-pills",
-                Color       = r["Color"]       as string ?? "#1b5e20",
-                Description = r["Description"] as string ?? "",
-                SortOrder   = r["SortOrder"] == DBNull.Value ? 0 : (int)r["SortOrder"]
+                Id           = (int)r["Id"],
+                Name         = r["Name"]        as string ?? "",
+                Slug         = r["Slug"]        as string ?? "",
+                Icon         = r["Icon"]        as string ?? "fas fa-pills",
+                Color        = r["Color"]       as string ?? "#1b5e20",
+                Description  = r["Description"] as string ?? "",
+                SortOrder    = r["SortOrder"]   == DBNull.Value ? 0 : (int)r["SortOrder"],
+                IsActive     = r["IsActive"]    != DBNull.Value && (bool)r["IsActive"],
+                HomeNavbar   = r["HomeNavbar"]  != DBNull.Value && (bool)r["HomeNavbar"],
+                FooterNavbar = r["FooterNavbar"]!= DBNull.Value && (bool)r["FooterNavbar"]
             };
         }
 
@@ -85,7 +88,24 @@ namespace HVIP.Helpers
         //  Categories
         // ══════════════════════════════════════════════════════
 
+        // Public nav — only active categories
         public static List<Category> GetCategories()
+        {
+            var list = new List<Category>();
+            try
+            {
+                const string sql = "SELECT * FROM Categories WHERE IsActive=1 ORDER BY SortOrder, Id";
+                using (var conn = DbHelper.GetOpenConnection())
+                using (var cmd  = new SqlCommand(sql, conn))
+                using (var r    = cmd.ExecuteReader())
+                    while (r.Read()) list.Add(MapCategory(r));
+            }
+            catch { }
+            return list;
+        }
+
+        // Admin panel — all categories regardless of IsActive
+        public static List<Category> GetCategoriesAdmin()
         {
             var list = new List<Category>();
             try

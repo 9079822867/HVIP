@@ -36,6 +36,26 @@
                     @Html.TextBoxFor(m => m.SortOrder, new { @class = "admin-input", type = "number", min = "0" })
                     <small class="text-muted">Lower number = shown first</small>
                 </div>
+
+                <!-- Visibility flags -->
+                <div class="col-12">
+                    <label class="admin-label mb-2">Visibility Options</label>
+                    <div class="d-flex flex-wrap gap-4">
+                        <label class="admin-checkbox">
+                            @Html.CheckBoxFor(m => m.IsActive)
+                            <span><i class="fas fa-toggle-on me-1 text-success"></i> Active (visible in shop)</span>
+                        </label>
+                        <label class="admin-checkbox">
+                            @Html.CheckBoxFor(m => m.HomeNavbar)
+                            <span><i class="fas fa-bars me-1 text-primary"></i> Show in Top Navigation</span>
+                        </label>
+                        <label class="admin-checkbox">
+                            @Html.CheckBoxFor(m => m.FooterNavbar)
+                            <span><i class="fas fa-grip-horizontal me-1 text-secondary"></i> Show in Footer</span>
+                        </label>
+                    </div>
+                </div>
+
                 <div class="col-12 d-flex gap-3">
                     <button type="submit" class="admin-btn-primary"><i class="fas fa-save me-1"></i>Save Category</button>
                     <a href="@Url.Action("Categories","Admin")" class="admin-btn-secondary">Cancel</a>

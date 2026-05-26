@@ -125,13 +125,18 @@ namespace HVIP.Helpers
         {
             if (c.Id == 0)
             {
-                const string sql = @"INSERT INTO Categories (Name,Slug,Icon,Color,Description,SortOrder)
-                                     OUTPUT INSERTED.Id VALUES(@N,@Sl,@Ic,@Co,@De,@So)";
+                const string sql = @"INSERT INTO Categories
+                                     (Name,Slug,Icon,Color,Description,SortOrder,IsActive,HomeNavbar,FooterNavbar)
+                                     OUTPUT INSERTED.Id
+                                     VALUES(@N,@Sl,@Ic,@Co,@De,@So,@Act,@HN,@FN)";
                 return DbHelper.Scalar<int>(sql, CatParams(c));
             }
             else
             {
-                const string sql = @"UPDATE Categories SET Name=@N,Slug=@Sl,Icon=@Ic,Color=@Co,Description=@De,SortOrder=@So WHERE Id=@Id";
+                const string sql = @"UPDATE Categories SET
+                                     Name=@N,Slug=@Sl,Icon=@Ic,Color=@Co,Description=@De,
+                                     SortOrder=@So,IsActive=@Act,HomeNavbar=@HN,FooterNavbar=@FN
+                                     WHERE Id=@Id";
                 DbHelper.Execute(sql, CatParams(c));
                 return c.Id;
             }
@@ -143,13 +148,16 @@ namespace HVIP.Helpers
 
         private static SqlParameter[] CatParams(Category c) => new[]
         {
-            new SqlParameter("@Id", c.Id),
-            new SqlParameter("@N",  c.Name  ?? ""),
-            new SqlParameter("@Sl", c.Slug  ?? ""),
-            new SqlParameter("@Ic", c.Icon  ?? "fas fa-pills"),
-            new SqlParameter("@Co", c.Color ?? "#1b5e20"),
-            new SqlParameter("@De", (object)c.Description ?? DBNull.Value),
-            new SqlParameter("@So", (object)c.SortOrder)
+            new SqlParameter("@Id",  c.Id),
+            new SqlParameter("@N",   c.Name  ?? ""),
+            new SqlParameter("@Sl",  c.Slug  ?? ""),
+            new SqlParameter("@Ic",  c.Icon  ?? "fas fa-pills"),
+            new SqlParameter("@Co",  c.Color ?? "#1b5e20"),
+            new SqlParameter("@De",  (object)c.Description ?? DBNull.Value),
+            new SqlParameter("@So",  (object)c.SortOrder),
+            new SqlParameter("@Act", c.IsActive),
+            new SqlParameter("@HN",  c.HomeNavbar),
+            new SqlParameter("@FN",  c.FooterNavbar)
         };
 
         // ── Orders List ───────────────────────────────────────

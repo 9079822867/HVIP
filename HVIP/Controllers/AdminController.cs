@@ -102,7 +102,7 @@ namespace HVIP.Controllers
         public ActionResult Categories()
         {
             ViewBag.Title = "Categories";
-            return View(ProductCatalog.GetCategories());
+            return View(ProductCatalog.GetCategoriesAdmin());
         }
 
         [HttpGet]

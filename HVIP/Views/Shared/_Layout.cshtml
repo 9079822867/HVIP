@@ -132,11 +132,9 @@
             </li>
             @if (ViewBag.Categories != null)
             {
-                var navCats = ViewBag.Categories as List<HVIP.Models.Category>;
-                int _n = 0;
-                foreach (var cat in navCats)
+                foreach (var cat in ViewBag.Categories as List<HVIP.Models.Category>)
                 {
-                    if (_n++ >= 5) break;
+                    if (!cat.HomeNavbar) continue;
                     <li><a href="@Url.Action("Index","Shop",new{categoryId=cat.Id})">@cat.Name</a></li>
                 }
             }
@@ -233,6 +231,7 @@
                     {
                         foreach (var cat in ViewBag.Categories as List<HVIP.Models.Category>)
                         {
+                            if (!cat.FooterNavbar) continue;
                             <li>
                                 <a href="@Url.Action("Index","Shop",new{categoryId=cat.Id})">
                                     <i class="@cat.Icon me-1" style="color:#4caf50;font-size:11px;"></i>@cat.Name

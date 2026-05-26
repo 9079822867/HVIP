@@ -38,15 +38,37 @@ GO
 IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name='Categories')
 BEGIN
     CREATE TABLE Categories (
-        Id          INT           PRIMARY KEY IDENTITY(1,1),
-        Name        NVARCHAR(100) NOT NULL,
-        Slug        NVARCHAR(100) NOT NULL,
-        Icon        NVARCHAR(100) NOT NULL DEFAULT 'fas fa-pills',
-        Color       NVARCHAR(20)  NOT NULL DEFAULT '#1b5e20',
-        Description NVARCHAR(300) NULL,
-        SortOrder   INT           NOT NULL DEFAULT 0
+        Id           INT           PRIMARY KEY IDENTITY(1,1),
+        Name         NVARCHAR(100) NOT NULL,
+        Slug         NVARCHAR(100) NOT NULL,
+        Icon         NVARCHAR(100) NOT NULL DEFAULT 'fas fa-pills',
+        Color        NVARCHAR(20)  NOT NULL DEFAULT '#1b5e20',
+        Description  NVARCHAR(300) NULL,
+        SortOrder    INT           NOT NULL DEFAULT 0,
+        IsActive     BIT           NOT NULL DEFAULT 1,
+        HomeNavbar   BIT           NOT NULL DEFAULT 1,
+        FooterNavbar BIT           NOT NULL DEFAULT 1
     );
     PRINT 'Table [Categories] created.';
+END
+ELSE
+BEGIN
+    -- Add new columns to existing table if not present
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=OBJECT_ID('Categories') AND name='IsActive')
+    BEGIN
+        ALTER TABLE Categories ADD IsActive BIT NOT NULL DEFAULT 1;
+        PRINT '[Categories] IsActive column added.';
+    END
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=OBJECT_ID('Categories') AND name='HomeNavbar')
+    BEGIN
+        ALTER TABLE Categories ADD HomeNavbar BIT NOT NULL DEFAULT 1;
+        PRINT '[Categories] HomeNavbar column added.';
+    END
+    IF NOT EXISTS (SELECT 1 FROM sys.columns WHERE object_id=OBJECT_ID('Categories') AND name='FooterNavbar')
+    BEGIN
+        ALTER TABLE Categories ADD FooterNavbar BIT NOT NULL DEFAULT 1;
+        PRINT '[Categories] FooterNavbar column added.';
+    END
 END
 GO
 
