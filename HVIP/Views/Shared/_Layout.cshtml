@@ -130,11 +130,16 @@
                     }
                 </div>
             </li>
-            <li><a href="@Url.Action("Index","Shop",new{categoryId=1})">Dilutions</a></li>
-            <li><a href="@Url.Action("Index","Shop",new{categoryId=2})">Mother Tinctures</a></li>
-            <li><a href="@Url.Action("Index","Shop",new{categoryId=3})">Biochemic</a></li>
-            <li><a href="@Url.Action("Index","Shop",new{categoryId=4})">Combination</a></li>
-            <li><a href="@Url.Action("Index","Shop",new{categoryId=6})">Hair Care</a></li>
+            @if (ViewBag.Categories != null)
+            {
+                var navCats = ViewBag.Categories as List<HVIP.Models.Category>;
+                int _n = 0;
+                foreach (var cat in navCats)
+                {
+                    if (_n++ >= 5) break;
+                    <li><a href="@Url.Action("Index","Shop",new{categoryId=cat.Id})">@cat.Name</a></li>
+                }
+            }
             <li><a href="@Url.Action("About","Home")">About Us</a></li>
             <li><a href="@Url.Action("Contact","Home")">Contact</a></li>
             @if (ViewBag.IsLoggedIn == true)
@@ -224,14 +229,17 @@
             <div class="col-lg-3 col-md-6">
                 <h5 class="footer-heading">Product Categories</h5>
                 <ul class="footer-links">
-                    <li><a href="@Url.Action("Index","Shop",new{categoryId=1})"><i class="fas fa-flask me-1" style="color:#4caf50;font-size:11px;"></i>Dilutions</a></li>
-                    <li><a href="@Url.Action("Index","Shop",new{categoryId=2})"><i class="fas fa-tint me-1" style="color:#4caf50;font-size:11px;"></i>Mother Tinctures</a></li>
-                    <li><a href="@Url.Action("Index","Shop",new{categoryId=3})"><i class="fas fa-tablets me-1" style="color:#4caf50;font-size:11px;"></i>Biochemic Tablets</a></li>
-                    <li><a href="@Url.Action("Index","Shop",new{categoryId=4})"><i class="fas fa-capsules me-1" style="color:#4caf50;font-size:11px;"></i>Combination Remedies</a></li>
-                    <li><a href="@Url.Action("Index","Shop",new{categoryId=5})"><i class="fas fa-fill-drip me-1" style="color:#4caf50;font-size:11px;"></i>Ointments & Creams</a></li>
-                    <li><a href="@Url.Action("Index","Shop",new{categoryId=6})"><i class="fas fa-spa me-1" style="color:#4caf50;font-size:11px;"></i>Hair Care</a></li>
-                    <li><a href="@Url.Action("Index","Shop",new{categoryId=7})"><i class="fas fa-leaf me-1" style="color:#4caf50;font-size:11px;"></i>Skin Care</a></li>
-                    <li><a href="@Url.Action("Index","Shop",new{categoryId=8})"><i class="fas fa-prescription-bottle me-1" style="color:#4caf50;font-size:11px;"></i>Drops & Syrups</a></li>
+                    @if (ViewBag.Categories != null)
+                    {
+                        foreach (var cat in ViewBag.Categories as List<HVIP.Models.Category>)
+                        {
+                            <li>
+                                <a href="@Url.Action("Index","Shop",new{categoryId=cat.Id})">
+                                    <i class="@cat.Icon me-1" style="color:#4caf50;font-size:11px;"></i>@cat.Name
+                                </a>
+                            </li>
+                        }
+                    }
                 </ul>
             </div>
             <div class="col-lg-4 col-md-6">
