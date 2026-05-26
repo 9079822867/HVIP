@@ -63,10 +63,10 @@
                 <!-- Flags -->
                 <div class="col-12">
                     <div class="d-flex flex-wrap gap-4 mt-2">
-                        <label class="admin-checkbox"><input type="checkbox" name="IsFeatured"   value="true" @(Model.IsFeatured  ?"checked":"")/> Featured</label>
-                        <label class="admin-checkbox"><input type="checkbox" name="IsBestseller" value="true" @(Model.IsBestseller?"checked":"")/> Bestseller</label>
-                        <label class="admin-checkbox"><input type="checkbox" name="IsNew"        value="true" @(Model.IsNew       ?"checked":"")/> New Arrival</label>
-                        <label class="admin-checkbox"><input type="checkbox" name="IsActive"     value="true" @(Model.IsActive    ?"checked":"")/> Active (visible)</label>
+                        <label class="admin-checkbox">@Html.CheckBoxFor(m => m.IsFeatured)   Featured</label>
+                        <label class="admin-checkbox">@Html.CheckBoxFor(m => m.IsBestseller) Bestseller</label>
+                        <label class="admin-checkbox">@Html.CheckBoxFor(m => m.IsNew)        New Arrival</label>
+                        <label class="admin-checkbox">@Html.CheckBoxFor(m => m.IsActive)     Active (visible)</label>
                     </div>
                 </div>
 
