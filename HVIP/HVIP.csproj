@@ -142,7 +142,6 @@
     <Compile Include="Helpers\UserRepository.cs" />
     <Compile Include="Models\Cart.cs" />
     <Compile Include="Models\Category.cs" />
-    <Compile Include="Models\ChangePasswordViewModel.cs" />
     <Compile Include="Models\CheckoutViewModel.cs" />
     <Compile Include="Models\ContactMessage.cs" />
     <Compile Include="Models\AdminDashboardViewModel.cs" />
