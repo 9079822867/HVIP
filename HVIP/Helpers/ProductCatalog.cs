@@ -24,7 +24,8 @@ namespace HVIP.Helpers
                 Slug        = r["Slug"]        as string ?? "",
                 Icon        = r["Icon"]        as string ?? "fas fa-pills",
                 Color       = r["Color"]       as string ?? "#1b5e20",
-                Description = r["Description"] as string ?? ""
+                Description = r["Description"] as string ?? "",
+                SortOrder   = r["SortOrder"] == DBNull.Value ? 0 : (int)r["SortOrder"]
             };
         }
 

@@ -27,9 +27,14 @@
                     @Html.TextBoxFor(m => m.Icon, new { @class = "admin-input", placeholder = "fas fa-pills" })
                     <small class="text-muted">Visit <a href="https://fontawesome.com/icons" target="_blank">fontawesome.com/icons</a> to find icon classes</small>
                 </div>
-                <div class="col-12">
+                <div class="col-md-8">
                     <label class="admin-label">Description</label>
                     @Html.TextBoxFor(m => m.Description, new { @class = "admin-input" })
+                </div>
+                <div class="col-md-4">
+                    <label class="admin-label">Sort Order</label>
+                    @Html.TextBoxFor(m => m.SortOrder, new { @class = "admin-input", type = "number", min = "0" })
+                    <small class="text-muted">Lower number = shown first</small>
                 </div>
                 <div class="col-12 d-flex gap-3">
                     <button type="submit" class="admin-btn-primary"><i class="fas fa-save me-1"></i>Save Category</button>
