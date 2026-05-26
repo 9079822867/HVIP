@@ -54,7 +54,8 @@ namespace HVIP.Helpers
                 IsFeatured       = r["IsFeatured"]   != DBNull.Value && (bool)r["IsFeatured"],
                 IsBestseller     = r["IsBestseller"] != DBNull.Value && (bool)r["IsBestseller"],
                 IsNew            = r["IsNew"]         != DBNull.Value && (bool)r["IsNew"],
-                Rating           = r["Rating"]   == DBNull.Value ? 4.0 : Convert.ToDouble(r["Rating"]),
+                IsActive = r["IsActive"] != DBNull.Value && (bool)r["IsActive"],
+                Rating = r["Rating"]   == DBNull.Value ? 4.0 : Convert.ToDouble(r["Rating"]),
                 ReviewCount      = r["ReviewCount"] == DBNull.Value ? 0 : (int)r["ReviewCount"],
                 Size             = r["Size"] as string ?? ""
             };
