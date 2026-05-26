@@ -13,6 +13,10 @@ namespace HVIP
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            // SEO files
+            routes.MapRoute("Sitemap", "sitemap.xml", new { controller = "Seo", action = "Sitemap" });
+            routes.MapRoute("Robots",  "robots.txt",  new { controller = "Seo", action = "Robots"  });
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

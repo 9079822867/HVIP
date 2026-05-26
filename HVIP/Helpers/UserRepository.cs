@@ -199,23 +199,24 @@ namespace HVIP.Helpers
             try
             {
                 using (var conn = DbHelper.GetOpenConnection())
-                using (var cmd  = new SqlCommand(sql, conn))
+                using (var cmd = new SqlCommand(sql, conn))
                 {
                     cmd.Parameters.AddWithValue("@UserId", userId);
                     using (var r = cmd.ExecuteReader())
                         while (r.Read())
                             list.Add(new OrderSummary
                             {
-                                Id            = (int)r["Id"],
-                                OrderNumber   = r["OrderNumber"]   as string,
-                                CustomerName  = r["CustomerName"]  as string,
-                                Email         = r["Email"]         as string,
-                                GrandTotal    = (decimal)r["GrandTotal"],
+                                Id = (int)r["Id"],
+                                OrderNumber = r["OrderNumber"] as string,
+                                CustomerName = r["CustomerName"] as string,
+                                Email = r["Email"] as string,
+                                GrandTotal = (decimal)r["GrandTotal"],
                                 PaymentMethod = r["PaymentMethod"] as string,
-                                Status        = r["Status"]        as string,
-                                OrderDate     = (DateTime)r["OrderDate"],
-                                ItemCount     = (int)r["ItemCount"]
+                                Status = r["Status"] as string,
+                                OrderDate = (DateTime)r["OrderDate"],
+                                ItemCount = (int)r["ItemCount"]
                             });
+                }
             }
             catch { }
             return list;

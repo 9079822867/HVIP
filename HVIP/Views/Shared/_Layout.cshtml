@@ -3,7 +3,49 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - HVIP Homeopathic</title>
+@{
+    /* ── SEO variables ─────────────────────────────────── */
+    string _base      = Request.Url.GetLeftPart(UriPartial.Authority);
+    string _path      = Request.Url.AbsolutePath;
+    string _seoTitle  = ViewBag.SeoTitle  as string;
+    string _seoDesc   = ViewBag.SeoDesc   as string
+        ?? "HVIP Homeopathic – India's most trusted homeopathic brand. Shop 30+ authentic GMP-certified products: dilutions, mother tinctures, biochemic tablets, combination remedies and more.";
+    string _seoKw     = ViewBag.SeoKeywords as string
+        ?? "homeopathic medicines online, dilutions, mother tinctures, biochemic tablets, HVIP homeopathic, buy homeopathy India";
+    string _seoImg    = ViewBag.SeoImage  as string;
+    string _canonical = ViewBag.Canonical as string ?? _base + _path;
+    bool   _noIndex   = ViewBag.SeoNoIndex == true;
+    string _ogType    = ViewBag.OgType    as string ?? "website";
+    string _pageTitle = _seoTitle
+        ?? (ViewBag.Title != null ? ViewBag.Title + " | HVIP Homeopathic" : "HVIP Homeopathic – India's Trusted Homeopathic Store");
+}
+    <title>@_pageTitle</title>
+    <meta name="description" content="@_seoDesc" />
+    <meta name="keywords"    content="@_seoKw" />
+    <meta name="author"      content="HVIP Homeopathic Pvt. Ltd." />
+    <meta name="robots"      content="@(_noIndex ? "noindex,nofollow" : "index,follow")" />
+    <link rel="canonical"    href="@_canonical" />
+
+    <!-- Open Graph -->
+    <meta property="og:type"        content="@_ogType" />
+    <meta property="og:site_name"   content="HVIP Homeopathic" />
+    <meta property="og:title"       content="@_pageTitle" />
+    <meta property="og:description" content="@_seoDesc" />
+    <meta property="og:url"         content="@_canonical" />
+    @if (!string.IsNullOrEmpty(_seoImg)) {
+    <meta property="og:image"       content="@(_seoImg.StartsWith("http") ? _seoImg : _base + _seoImg)" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height"content="630" />
+    }
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:title"       content="@_pageTitle" />
+    <meta name="twitter:description" content="@_seoDesc" />
+    @if (!string.IsNullOrEmpty(_seoImg)) {
+    <meta name="twitter:image"       content="@(_seoImg.StartsWith("http") ? _seoImg : _base + _seoImg)" />
+    }
+
     @Styles.Render("~/Content/css")
     <link href="/Content/hvip-theme.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
